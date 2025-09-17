@@ -13,5 +13,17 @@ describe('Auth API', () => {
         });
       expect(res.statusCode).toBe(501);
     });
+
+    it('should not allow duplicate registration', async () => {
+      // Red: Expect 409 Conflict for duplicate user
+      await request(app)
+        .post('/api/auth/register')
+        .send({ username: 'testuser', password: 'testpass' });
+      const res = await request(app)
+        .post('/api/auth/register')
+        .send({ username: 'testuser', password: 'testpass' });
+      expect(res.statusCode).toBe(409);
+      expect(res.body.message).toMatch(/already exists/i);
+    });
   });
 });
