@@ -15,7 +15,8 @@ beforeAll(async () => {
 beforeEach(async () => {
   await User.deleteMany({});
   await Sweet.deleteMany({});
-});
+    await User.create({ name: 'Test User', email: 'test@example.com' });
+  });
 
 afterAll(async () => {
   await mongoose.connection.close();

@@ -9,19 +9,19 @@ beforeEach(async () => {
   // Register and login a customer
   await request(app)
     .post('/api/auth/register')
-    .send({ username: 'roleuser', password: 'rolepass' });
+    .send({ name: 'Role User', email: 'roleuser@example.com', password: 'rolepass' });
   const res = await request(app)
     .post('/api/auth/login')
-    .send({ username: 'roleuser', password: 'rolepass' });
+  .send({ email: 'roleuser@example.com', password: 'rolepass' });
   customerToken = res.body.token;
 
   // Register and login an admin
   await request(app)
     .post('/api/auth/register')
-    .send({ username: 'adminrole', password: 'adminpass', role: 'admin' });
+    .send({ name: 'Admin Role', email: 'adminrole@example.com', password: 'adminpass', role: 'admin' });
   const adminRes = await request(app)
     .post('/api/auth/login')
-    .send({ username: 'adminrole', password: 'adminpass' });
+  .send({ email: 'adminrole@example.com', password: 'adminpass' });
   adminToken = adminRes.body.token;
 
   // Add a sweet as admin (so admin can delete it)

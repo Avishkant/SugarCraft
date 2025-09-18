@@ -1,154 +1,94 @@
-import React, { useState, useEffect } from 'react';
-import SweetCard from '../components/SweetCard';
 
-const initialForm = {
-  name: '',
-  category: '',
-  price: '',
-  quantity: '',
-  image: '',
-};
+import { useState } from 'react';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
-const AdminDashboard = () => {
-  const [sweets, setSweets] = useState([]);
-  const [form, setForm] = useState(initialForm);
-  const [editingId, setEditingId] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+const initialSweets = [
+  { _id: '1', name: 'Chocolate Truffle', category: 'Chocolate', price: 120, quantity: 10 },
+  { _id: '2', name: 'Strawberry Tart', category: 'Fruit', price: 90, quantity: 5 },
+  { _id: '3', name: 'Lemon Meringue', category: 'Citrus', price: 100, quantity: 0 },
+];
 
-  useEffect(() => {
-    const fetchSweets = async () => {
-      setLoading(true);
-      setError('');
-      try {
-        const res = await fetch('/api/sweets');
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || 'Failed to fetch sweets');
-        setSweets(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchSweets();
-  }, []);
+export default function AdminDashboard() {
+  const [search, setSearch] = useState('');
+  const [sweets, setSweets] = useState(initialSweets);
+  const [form, setForm] = useState({ name: '', category: '', price: '', quantity: '' });
+  const [editId, setEditId] = useState(null);
+
+  const filteredSweets = sweets.filter(sweet =>
+    sweet.name.toLowerCase().includes(search.toLowerCase()) ||
+    sweet.category.toLowerCase().includes(search.toLowerCase())
+  );
 
   const handleChange = e => {
-    const { name, value } = e.target;
-    setForm(f => ({ ...f, [name]: value }));
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleImageUpload = e => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setForm(f => ({ ...f, image: reader.result }));
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleSubmit = async e => {
+  const handleAddOrUpdate = e => {
     e.preventDefault();
-    setError('');
-    try {
-      const method = editingId ? 'PUT' : 'POST';
-      const url = editingId ? `/api/sweets/${editingId}` : '/api/sweets';
-      const res = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || 'Save failed');
-      setForm(initialForm);
-      setEditingId(null);
-      // Refresh sweets list
-      setSweets(prev => {
-        if (editingId) {
-          return prev.map(s => s.id === editingId ? data : s);
-        } else {
-          return [...prev, data];
-        }
-      });
-    } catch (err) {
-      setError(err.message);
+    if (editId) {
+      setSweets(sweets.map(sweet => sweet._id === editId ? { ...sweet, ...form, price: Number(form.price), quantity: Number(form.quantity) } : sweet));
+      setEditId(null);
+    } else {
+      setSweets([...sweets, { _id: Date.now().toString(), ...form, price: Number(form.price), quantity: Number(form.quantity) }]);
     }
+    setForm({ name: '', category: '', price: '', quantity: '' });
   };
 
   const handleEdit = sweet => {
-    setForm({ ...sweet });
-    setEditingId(sweet.id);
+    setEditId(sweet._id);
+    setForm({ name: sweet.name, category: sweet.category, price: sweet.price, quantity: sweet.quantity });
   };
 
-  const handleDelete = async id => {
-    if (!window.confirm('Delete this sweet?')) return;
-    try {
-      const res = await fetch(`/api/sweets/${id}`, { method: 'DELETE' });
-      if (!res.ok) throw new Error('Delete failed');
-      setSweets(prev => prev.filter(s => s.id !== id));
-    } catch (err) {
-      alert(err.message);
-    }
-  };
-
-  const handleRestock = async id => {
-    try {
-      const res = await fetch(`/api/sweets/${id}/restock`, { method: 'POST' });
-      if (!res.ok) throw new Error('Restock failed');
-      setSweets(prev => prev.map(s => s.id === id ? { ...s, quantity: s.quantity + 1 } : s));
-    } catch (err) {
-      alert(err.message);
-    }
+  const handleDelete = id => {
+    setSweets(sweets.filter(sweet => sweet._id !== id));
+    if (editId === id) setEditId(null);
   };
 
   return (
-    <div className="min-h-screen bg-light py-10 px-4">
-      <h2 className="text-4xl font-extrabold text-accent mb-8 text-center drop-shadow-lg">Admin Dashboard</h2>
-      <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-xl mx-auto flex flex-col gap-4 mb-10">
-        <h3 className="text-2xl font-bold text-primary mb-2 text-center">{editingId ? 'Edit Sweet' : 'Add New Sweet'}</h3>
-        {error && <div className="text-red-500 text-center mb-2">{error}</div>}
-        <input name="name" value={form.name} onChange={handleChange} placeholder="Name" className="px-4 py-2 rounded-full border-2 border-primary focus:outline-none focus:ring-2 focus:ring-accent" required />
-        <input name="category" value={form.category} onChange={handleChange} placeholder="Category" className="px-4 py-2 rounded-full border-2 border-secondary focus:outline-none focus:ring-2 focus:ring-primary" required />
-        <input name="price" value={form.price} onChange={handleChange} placeholder="Price" type="number" min="0" step="0.01" className="px-4 py-2 rounded-full border-2 border-accent focus:outline-none focus:ring-2 focus:ring-secondary" required />
-        <input name="quantity" value={form.quantity} onChange={handleChange} placeholder="Quantity" type="number" min="0" className="px-4 py-2 rounded-full border-2 border-primary focus:outline-none focus:ring-2 focus:ring-accent" required />
-        <input type="file" accept="image/*" onChange={handleImageUpload} className="px-4 py-2 rounded-full border-2 border-secondary" />
-        {form.image && <img src={form.image} alt="Sweet" className="w-20 h-20 object-cover rounded-full mx-auto border-4 border-accent shadow-md" />}
-        <button type="submit" className="px-6 py-2 rounded-full font-bold text-white bg-gradient-to-r from-primary to-accent shadow-md transition-all duration-200 hover:from-accent hover:to-primary">
-          {editingId ? 'Update Sweet' : 'Add Sweet'}
-        </button>
-        {editingId && <button type="button" onClick={() => { setForm(initialForm); setEditingId(null); }} className="px-6 py-2 rounded-full font-bold text-dark bg-light border border-primary mt-2">Cancel</button>}
-      </form>
-      {loading ? (
-        <div className="text-center text-primary text-xl">Loading sweets...</div>
-      ) : error ? (
-        <div className="text-center text-red-500 text-xl">{error}</div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 justify-items-center">
-          {sweets.map(sweet => (
-            <div key={sweet.id} className="relative">
-              <SweetCard
-                name={sweet.name}
-                category={sweet.category}
-                price={sweet.price}
-                quantity={sweet.quantity}
-                image={sweet.image}
-                disabled={sweet.quantity === 0}
-                onPurchase={() => {}}
-              />
-              <div className="absolute top-2 right-2 flex flex-col gap-2">
-                <button onClick={() => handleEdit(sweet)} className="px-2 py-1 rounded bg-secondary text-dark font-bold shadow hover:bg-primary hover:text-white">Edit</button>
-                <button onClick={() => handleDelete(sweet.id)} className="px-2 py-1 rounded bg-primary text-white font-bold shadow hover:bg-secondary hover:text-dark">Delete</button>
-                <button onClick={() => handleRestock(sweet.id)} className="px-2 py-1 rounded bg-accent text-dark font-bold shadow hover:bg-primary hover:text-white">Restock</button>
-              </div>
-            </div>
-          ))}
+    <div className="min-h-screen flex flex-col bg-[#F5F5DC]">
+      <Navbar />
+      <div className="container mx-auto flex-1 py-10">
+        <h1 className="text-4xl font-bold text-[#3E2723] mb-6 text-center">Admin Dashboard</h1>
+        <div className="flex justify-center mb-8">
+          <input
+            type="text"
+            placeholder="Search sweets by name or category..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="w-full max-w-md px-4 py-2 border border-[#A5D6A7] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFB74D] transition bg-[#FFF8F0] text-[#3E2723]"
+          />
         </div>
-      )}
+        <form className="bg-[#FFF8F0] border-2 border-[#795548] rounded-xl shadow-lg p-6 mb-10 max-w-xl mx-auto" onSubmit={handleAddOrUpdate}>
+          <h2 className="text-2xl font-bold text-[#795548] mb-4">{editId ? 'Update Sweet' : 'Add New Sweet'}</h2>
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <input type="text" name="name" value={form.name} onChange={handleChange} placeholder="Name" required className="px-4 py-2 border border-[#A5D6A7] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFB74D] transition bg-[#F5F5DC] text-[#3E2723]" />
+            <input type="text" name="category" value={form.category} onChange={handleChange} placeholder="Category" required className="px-4 py-2 border border-[#A5D6A7] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFB74D] transition bg-[#F5F5DC] text-[#3E2723]" />
+            <input type="number" name="price" value={form.price} onChange={handleChange} placeholder="Price" required className="px-4 py-2 border border-[#A5D6A7] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFB74D] transition bg-[#F5F5DC] text-[#3E2723]" />
+            <input type="number" name="quantity" value={form.quantity} onChange={handleChange} placeholder="Quantity" required className="px-4 py-2 border border-[#A5D6A7] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFB74D] transition bg-[#F5F5DC] text-[#3E2723]" />
+          </div>
+          <button type="submit" className="w-full bg-gradient-to-r from-[#FFB74D] to-[#A5D6A7] text-[#3E2723] py-2 rounded-lg font-semibold shadow-lg hover:scale-105 transition">{editId ? 'Update Sweet' : 'Add Sweet'}</button>
+        </form>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredSweets.length === 0 ? (
+            <div className="col-span-3 text-center text-[#795548]">No sweets found.</div>
+          ) : (
+            filteredSweets.map(sweet => (
+              <div key={sweet._id} className="bg-[#FFF8F0] border-2 border-[#795548] rounded-xl shadow-lg p-6 flex flex-col items-center">
+                <h2 className="text-2xl font-bold text-[#3E2723] mb-2">{sweet.name}</h2>
+                <p className="text-[#795548] mb-1">Category: {sweet.category}</p>
+                <p className="text-[#3E2723] font-semibold mb-2">Price: ₹{sweet.price}</p>
+                <p className="text-[#A5D6A7] mb-2">In stock: {sweet.quantity}</p>
+                <div className="flex gap-2 mt-2">
+                  <button onClick={() => handleEdit(sweet)} className="px-3 py-1 rounded-lg bg-gradient-to-r from-[#A5D6A7] to-[#FFB74D] text-[#3E2723] font-semibold shadow hover:scale-105 transition">Edit</button>
+                  <button onClick={() => handleDelete(sweet._id)} className="px-3 py-1 rounded-lg bg-[#795548] text-[#F5F5DC] font-semibold shadow hover:scale-105 transition">Delete</button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+      <Footer />
     </div>
   );
-};
-
-export default AdminDashboard;
+}

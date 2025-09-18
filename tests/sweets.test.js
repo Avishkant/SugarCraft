@@ -8,10 +8,10 @@ beforeEach(async () => {
   // Register and login a user to get token
   await request(app)
     .post('/api/auth/register')
-    .send({ username: 'sweetuser', password: 'sweetpass' });
+    .send({ name: 'Sweet User', email: 'sweetuser@example.com', password: 'sweetpass' });
   const res = await request(app)
     .post('/api/auth/login')
-    .send({ username: 'sweetuser', password: 'sweetpass' });
+  .send({ email: 'sweetuser@example.com', password: 'sweetpass' });
   token = res.body.token;
 });
 
