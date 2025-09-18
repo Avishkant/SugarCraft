@@ -2,11 +2,15 @@ const Sweet = require('../models/Sweet');
 
 exports.createSweet = async (req, res) => {
   const { name, category, price, quantity } = req.body;
+  let imageUrl = '';
   if (!name || !category || price == null || quantity == null) {
     return res.status(400).json({ message: 'All fields required' });
   }
+  if (req.file && req.file.path) {
+    imageUrl = req.file.path;
+  }
   try {
-    const sweet = await Sweet.create({ name, category, price, quantity });
+    const sweet = await Sweet.create({ name, category, price, quantity, image: imageUrl });
     res.status(201).json(sweet);
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
