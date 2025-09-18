@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 exports.register = async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, role } = req.body;
   if (!username || !password) {
     return res.status(400).json({ message: 'Username and password required' });
   }
@@ -13,7 +13,7 @@ exports.register = async (req, res) => {
       return res.status(409).json({ message: 'User already exists' });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    await User.create({ username, password: hashedPassword });
+    await User.create({ username, password: hashedPassword, role: role || 'customer' });
     res.status(201).json({ message: 'User registered successfully' });
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
@@ -34,9 +34,14 @@ exports.login = async (req, res) => {
     if (!isMatch) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
-    const token = jwt.sign({ userId: user._id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ userId: user._id, username: user.username, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
     return res.status(200).json({ token });
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
   }
+};
+
+exports.logout = (req, res) => {
+  // For JWT, instruct client to delete token
+  res.status(200).json({ message: 'Logout successful. Please remove token from client.' });
 };
