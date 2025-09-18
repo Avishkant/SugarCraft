@@ -2,11 +2,12 @@ const express = require('express');
 const router = express.Router();
 const sweetController = require('../controllers/sweetController');
 const authMiddleware = require('../middleware/authMiddleware');
+const adminMiddleware = require('../middleware/adminMiddleware');
 
 router.post('/', authMiddleware, sweetController.createSweet);
 router.get('/', authMiddleware, sweetController.getSweets);
 router.get('/search', authMiddleware, sweetController.searchSweets);
 router.put('/:id', authMiddleware, sweetController.updateSweet);
-router.delete('/:id', authMiddleware, sweetController.deleteSweet);
+router.delete('/:id', authMiddleware, adminMiddleware, sweetController.deleteSweet);
 
 module.exports = router;
