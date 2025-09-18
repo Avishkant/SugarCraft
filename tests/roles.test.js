@@ -24,10 +24,10 @@ beforeAll(async () => {
     .send({ username: 'adminrole', password: 'adminpass' });
   adminToken = adminRes.body.token;
 
-  // Add a sweet
+  // Add a sweet as admin (so admin can delete it)
   const sweetRes = await request(app)
     .post('/api/sweets')
-    .set('Authorization', `Bearer ${customerToken}`)
+    .set('Authorization', `Bearer ${adminToken}`)
     .send({ name: 'Kaju Katli', category: 'Indian', price: 40, quantity: 20 });
   sweetId = sweetRes.body._id;
 });
@@ -41,8 +41,14 @@ describe('Role-based Access', () => {
   });
 
   it('should allow admin to delete sweet', async () => {
+    // Re-create sweet for admin to delete (since previous test deletes it)
+    const sweetRes = await request(app)
+      .post('/api/sweets')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ name: 'Kaju Katli', category: 'Indian', price: 40, quantity: 20 });
+    const newSweetId = sweetRes.body._id;
     const res = await request(app)
-      .delete(`/api/sweets/${sweetId}`)
+      .delete(`/api/sweets/${newSweetId}`)
       .set('Authorization', `Bearer ${adminToken}`);
     expect(res.statusCode).toBe(200);
   });

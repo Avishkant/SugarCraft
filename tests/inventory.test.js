@@ -24,10 +24,10 @@ beforeAll(async () => {
     .send({ username: 'admininv', password: 'adminpass' });
   adminToken = adminRes.body.token;
 
-  // Add a sweet
+  // Add a sweet as admin (so admin can restock it)
   const sweetRes = await request(app)
     .post('/api/sweets')
-    .set('Authorization', `Bearer ${token}`)
+    .set('Authorization', `Bearer ${adminToken}`)
     .send({ name: 'Jalebi', category: 'Indian', price: 20, quantity: 10 });
   sweetId = sweetRes.body._id;
 });
