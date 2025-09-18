@@ -5,7 +5,7 @@ let customerToken;
 let adminToken;
 let sweetId;
 
-beforeAll(async () => {
+beforeEach(async () => {
   // Register and login a customer
   await request(app)
     .post('/api/auth/register')
@@ -41,14 +41,8 @@ describe('Role-based Access', () => {
   });
 
   it('should allow admin to delete sweet', async () => {
-    // Re-create sweet for admin to delete (since previous test deletes it)
-    const sweetRes = await request(app)
-      .post('/api/sweets')
-      .set('Authorization', `Bearer ${adminToken}`)
-      .send({ name: 'Kaju Katli', category: 'Indian', price: 40, quantity: 20 });
-    const newSweetId = sweetRes.body._id;
     const res = await request(app)
-      .delete(`/api/sweets/${newSweetId}`)
+      .delete(`/api/sweets/${sweetId}`)
       .set('Authorization', `Bearer ${adminToken}`);
     expect(res.statusCode).toBe(200);
   });

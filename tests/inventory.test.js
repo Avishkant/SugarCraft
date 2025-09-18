@@ -5,7 +5,7 @@ let token;
 let adminToken;
 let sweetId;
 
-beforeAll(async () => {
+beforeEach(async () => {
   // Register and login a user
   await request(app)
     .post('/api/auth/register')

@@ -4,7 +4,7 @@ const app = require('../src/index');
 let token;
 let sweetId;
 
-beforeAll(async () => {
+beforeEach(async () => {
   // Register and login a user to get token
   await request(app)
     .post('/api/auth/register')
@@ -26,6 +26,11 @@ describe('Sweets API', () => {
   });
 
   it('should get all sweets', async () => {
+    // Add a sweet first
+    await request(app)
+      .post('/api/sweets')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ name: 'Barfi', category: 'Indian', price: 30, quantity: 50 });
     const res = await request(app)
       .get('/api/sweets')
       .set('Authorization', `Bearer ${token}`);
