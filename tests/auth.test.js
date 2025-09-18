@@ -4,26 +4,49 @@ const app = require('../src/index');
 describe('Auth API', () => {
   describe('POST /api/auth/register', () => {
     it('should register a new user', async () => {
-      // Red: Expect 501 Not Implemented
       const res = await request(app)
         .post('/api/auth/register')
         .send({
-          username: 'testuser',
-          password: 'testpass',
+          username: 'testuser1',
+          password: 'testpass1',
         });
-      expect(res.statusCode).toBe(501);
+      expect(res.statusCode).toBe(201);
+      expect(res.body.message).toMatch(/registered/i);
     });
 
     it('should not allow duplicate registration', async () => {
-      // Red: Expect 409 Conflict for duplicate user
       await request(app)
         .post('/api/auth/register')
-        .send({ username: 'testuser', password: 'testpass' });
+        .send({ username: 'testuser2', password: 'testpass2' });
       const res = await request(app)
         .post('/api/auth/register')
-        .send({ username: 'testuser', password: 'testpass' });
+        .send({ username: 'testuser2', password: 'testpass2' });
       expect(res.statusCode).toBe(409);
       expect(res.body.message).toMatch(/already exists/i);
+    });
+  });
+
+  describe('POST /api/auth/login', () => {
+    it('should login a registered user', async () => {
+      await request(app)
+        .post('/api/auth/register')
+        .send({ username: 'testuser3', password: 'testpass3' });
+      const res = await request(app)
+        .post('/api/auth/login')
+        .send({ username: 'testuser3', password: 'testpass3' });
+      expect(res.statusCode).toBe(200);
+      expect(res.body.token).toBeDefined();
+    });
+
+    it('should not login with wrong password', async () => {
+      await request(app)
+        .post('/api/auth/register')
+        .send({ username: 'testuser4', password: 'testpass4' });
+      const res = await request(app)
+        .post('/api/auth/login')
+        .send({ username: 'testuser4', password: 'wrongpass' });
+      expect(res.statusCode).toBe(401);
+      expect(res.body.message).toMatch(/invalid credentials/i);
     });
   });
 });
