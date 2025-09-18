@@ -20,7 +20,22 @@ export default function CustomerDashboard() {
     <div className="min-h-screen flex flex-col bg-[#F5F5DC]">
       <Navbar />
       <div className="container mx-auto flex-1 py-10">
-        <h1 className="text-4xl font-bold text-[#3E2723] mb-6 text-center">Customer Dashboard</h1>
+        <h1 className="text-4xl font-bold text-[#3E2723] mb-2 text-center">Customer Dashboard</h1>
+        <h2 className="text-2xl text-[#A5D6A7] mb-6 text-center">Hi [Customer Name], ready to satisfy your sweet tooth today?</h2>
+        <div className="mb-8 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+          <div className="bg-[#FFF8F0] border-2 border-[#A5D6A7] rounded-xl shadow-lg p-6">
+            <h3 className="text-xl font-bold text-[#795548] mb-2">Browse Sweets</h3>
+            <p className="text-[#3E2723]">Filter by category and price, add to wishlist or cart.</p>
+          </div>
+          <div className="bg-[#FFF8F0] border-2 border-[#A5D6A7] rounded-xl shadow-lg p-6">
+            <h3 className="text-xl font-bold text-[#795548] mb-2">Purchase History</h3>
+            <p className="text-[#3E2723]">View your previous orders and sweet memories.</p>
+          </div>
+          <div className="bg-[#FFF8F0] border-2 border-[#A5D6A7] rounded-xl shadow-lg p-6">
+            <h3 className="text-xl font-bold text-[#795548] mb-2">Wishlist / Cart</h3>
+            <p className="text-[#3E2723]">Save your favorite sweets for later or checkout now!</p>
+          </div>
+        </div>
         <div className="flex justify-center mb-8">
           <input
             type="text"

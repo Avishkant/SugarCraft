@@ -1,5 +1,34 @@
+// SWEETS CRUD
+export async function fetchSweets(token) {
+	const res = await fetch(`${BASE_URL}/sweets`, {
+		method: 'GET',
+		headers: {
+			'Authorization': `Bearer ${token}`,
+		},
+	});
+	if (!res.ok) throw new Error((await res.json()).message || 'Failed to fetch sweets');
+	return res.json();
+}
+
+export async function addSweet(data, token) {
+	const formData = new FormData();
+	formData.append('name', data.name);
+	formData.append('category', data.category);
+	formData.append('price', data.price);
+	formData.append('quantity', data.quantity);
+	if (data.image) formData.append('image', data.image);
+	const res = await fetch(`${BASE_URL}/sweets`, {
+		method: 'POST',
+		headers: {
+			'Authorization': `Bearer ${token}`,
+		},
+		body: formData,
+	});
+	if (!res.ok) throw new Error((await res.json()).message || 'Failed to add sweet');
+	return res.json();
+}
 // API utility for authentication endpoints
-const BASE_URL = 'http://localhost:5000/api'; // Change to your backend URL
+export const BASE_URL = 'http://localhost:5000/api'; // Change to your backend URL
 
 export async function registerUser(data) {
 	try {
