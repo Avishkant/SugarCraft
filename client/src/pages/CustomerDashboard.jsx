@@ -1,71 +1,67 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
 const sweets = [
-  { _id: '1', name: 'Chocolate Truffle', category: 'Chocolate', price: 120, quantity: 10 },
-  { _id: '2', name: 'Strawberry Tart', category: 'Fruit', price: 90, quantity: 5 },
-  { _id: '3', name: 'Lemon Meringue', category: 'Citrus', price: 100, quantity: 0 },
+  { _id: '1', name: 'Chocolate Truffle', category: 'Chocolate', price: 120, quantity: 10, tagline: 'Rich, creamy, irresistible.' },
+  { _id: '2', name: 'Strawberry Tart', category: 'Fruit', price: 90, quantity: 5, tagline: 'Fresh and tangy delight.' },
+  { _id: '3', name: 'Lemon Meringue', category: 'Citrus', price: 100, quantity: 0, tagline: 'Zesty, sweet, and fluffy.' },
 ];
 
 export default function CustomerDashboard() {
-  const [search, setSearch] = useState('');
-  const filteredSweets = sweets.filter(sweet =>
-    sweet.name.toLowerCase().includes(search.toLowerCase()) ||
-    sweet.category.toLowerCase().includes(search.toLowerCase())
-  );
+  const [customerName, setCustomerName] = useState('');
+  useEffect(() => {
+    // Get name from JWT token
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        setCustomerName(payload.email?.split('@')[0] || 'Customer');
+      } catch {
+        setCustomerName('Customer');
+      }
+    }
+  }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F5F5DC]">
+  <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#f8fafc] via-[#e0e7ff] to-[#f0fdfa]">
       <Navbar />
-      <div className="container mx-auto flex-1 py-10">
-        <h1 className="text-4xl font-bold text-[#3E2723] mb-2 text-center">Customer Dashboard</h1>
-        <h2 className="text-2xl text-[#A5D6A7] mb-6 text-center">Hi [Customer Name], ready to satisfy your sweet tooth today?</h2>
-        <div className="mb-8 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-          <div className="bg-[#FFF8F0] border-2 border-[#A5D6A7] rounded-xl shadow-lg p-6">
-            <h3 className="text-xl font-bold text-[#795548] mb-2">Browse Sweets</h3>
-            <p className="text-[#3E2723]">Filter by category and price, add to wishlist or cart.</p>
+  <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="container mx-auto flex-1 py-10">
+        {/* Hero Section */}
+        <section className="flex flex-col items-center justify-center py-12 mb-8 rounded-2xl shadow-xl bg-white bg-opacity-90 animate-fadeIn">
+          <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#6366f1] via-[#06b6d4] to-[#f43f5e] mb-2 text-center drop-shadow-lg">Welcome back, {customerName} 🍬</h1>
+          <p className="text-xl text-[#334155] mb-6 text-center">Craving something sweet today? Explore our fresh collection.</p>
+          <div className="flex gap-6 mb-4">
+            <button className="bg-gradient-to-r from-[#6366f1] to-[#06b6d4] text-white px-6 py-3 rounded-full font-bold shadow-lg hover:scale-105 transition" onClick={() => window.location.href='/sweets'}>🍭 Browse Sweets</button>
+            <button className="bg-gradient-to-r from-[#f43f5e] to-[#f59e42] text-white px-6 py-3 rounded-full font-bold shadow-lg hover:scale-105 transition" onClick={() => window.location.href='/wishlist'}>❤️ View Your Wishlist</button>
           </div>
-          <div className="bg-[#FFF8F0] border-2 border-[#A5D6A7] rounded-xl shadow-lg p-6">
-            <h3 className="text-xl font-bold text-[#795548] mb-2">Purchase History</h3>
-            <p className="text-[#3E2723]">View your previous orders and sweet memories.</p>
+        </section>
+        {/* Highlights / Quick Actions */}
+        <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+          <div className="bg-gradient-to-br from-[#e0e7ff] to-[#6366f1] rounded-xl shadow-lg p-6 flex flex-col items-center">
+            <span className="text-3xl mb-2">🎁</span>
+            <h3 className="text-xl font-bold text-[#6366f1] mb-2">Today's Offers</h3>
+            <p className="text-[#334155]">Special discounts on best sellers!</p>
           </div>
-          <div className="bg-[#FFF8F0] border-2 border-[#A5D6A7] rounded-xl shadow-lg p-6">
-            <h3 className="text-xl font-bold text-[#795548] mb-2">Wishlist / Cart</h3>
-            <p className="text-[#3E2723]">Save your favorite sweets for later or checkout now!</p>
+          <div className="bg-gradient-to-br from-[#f0fdfa] to-[#06b6d4] rounded-xl shadow-lg p-6 flex flex-col items-center">
+            <span className="text-3xl mb-2">🛒</span>
+            <h3 className="text-xl font-bold text-[#06b6d4] mb-2">Your Last Purchase</h3>
+            <button className="mt-2 bg-gradient-to-r from-[#6366f1] to-[#06b6d4] text-white px-4 py-2 rounded-lg font-semibold shadow hover:scale-105 transition">Reorder</button>
           </div>
-        </div>
-        <div className="flex justify-center mb-8">
-          <input
-            type="text"
-            placeholder="Search sweets by name or category..."
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            className="w-full max-w-md px-4 py-2 border border-[#A5D6A7] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFB74D] transition bg-[#FFF8F0] text-[#3E2723]"
-          />
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredSweets.length === 0 ? (
-            <div className="col-span-3 text-center text-[#795548]">No sweets found.</div>
-          ) : (
-            filteredSweets.map(sweet => (
-              <div key={sweet._id} className="bg-[#FFF8F0] border-2 border-[#795548] rounded-xl shadow-lg p-6 flex flex-col items-center">
-                <h2 className="text-2xl font-bold text-[#3E2723] mb-2">{sweet.name}</h2>
-                <p className="text-[#795548] mb-1">Category: {sweet.category}</p>
-                <p className="text-[#3E2723] font-semibold mb-2">Price: ₹{sweet.price}</p>
-                <p className="text-[#A5D6A7] mb-2">In stock: {sweet.quantity}</p>
-                <button
-                  className={`mt-2 px-4 py-2 rounded-lg font-semibold shadow-lg transition-colors duration-300 ${sweet.quantity === 0 ? 'bg-[#795548] text-[#F5F5DC] cursor-not-allowed' : 'bg-gradient-to-r from-[#FFB74D] to-[#A5D6A7] text-[#3E2723] hover:scale-105'}`}
-                  disabled={sweet.quantity === 0}
-                >
-                  {sweet.quantity === 0 ? 'Out of Stock' : 'Purchase'}
-                </button>
-              </div>
-            ))
-          )}
-        </div>
-      </div>
+          <div className="bg-gradient-to-br from-[#f0fdfa] to-[#f43f5e] rounded-xl shadow-lg p-6 flex flex-col items-center">
+            <span className="text-3xl mb-2">🌟</span>
+            <h3 className="text-xl font-bold text-[#f43f5e] mb-2">Recommended for You</h3>
+            <p className="text-[#334155]">Handpicked sweets based on your taste!</p>
+          </div>
+        </motion.section>
+        {/* About Section */}
+        <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="py-8 px-4 bg-white bg-opacity-95 rounded-xl shadow-md mx-auto max-w-2xl mb-10 animate-fadeIn">
+          <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#6366f1] via-[#06b6d4] to-[#f43f5e] mb-3">At SugarCraft, every sweet has a story.</h2>
+          <p className="text-lg text-[#334155]">From traditional mithai to modern delights, we craft happiness for every moment.</p>
+        </motion.section>
+      </motion.div>
       <Footer />
     </div>
   );
