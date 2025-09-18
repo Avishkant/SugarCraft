@@ -23,14 +23,74 @@ export default function Home() {
           <button className="bg-[#A5D6A7] text-[#3E2723] px-6 py-3 rounded-full font-bold shadow-lg hover:bg-[#FFB74D] transition">✨ Join the SugarCraft Family</button>
         </div>
       </section>
-      {/* About Us Section */}
-      <section className="py-10 px-4 bg-white bg-opacity-80 rounded-xl shadow-md mx-auto max-w-3xl mb-10 animate-fadeIn">
-        <h2 className="text-3xl font-bold text-[#795548] mb-3">About SugarCraft</h2>
-        <p className="text-lg text-gray-700">At SugarCraft, we believe sweets are more than just food – they’re happiness, tradition, and memories wrapped in sugar.<br />
-        We started our journey with a single goal: to bring joy to every moment through beautifully crafted sweets.<br />
-        Our collection blends the richness of traditional Indian mithai with the fun of modern candies and desserts.<br />
-        Every sweet is prepared with care, quality ingredients, and creativity, so you taste not just sugar, but love.</p>
-      </section>
+      {/* Spacer between Hero and About */}
+      <div className="h-10" />
+      {/* Modern About Us Section */}
+      <motion.section
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, type: 'spring' }}
+        viewport={{ once: true }}
+  className="relative py-12 px-6 bg-gradient-to-br from-[#FDEFF2] via-[#B2DFDB]/70 to-[#FFF9C4]/70 rounded-3xl shadow-2xl mx-auto max-w-3xl mb-14 border border-[#B2DFDB]"
+      >
+        <motion.div
+          initial={{ scale: 0.95 }}
+          whileHover={{ scale: 1.02 }}
+          transition={{ duration: 0.4 }}
+          className="flex flex-col items-center"
+        >
+          <h2 className="text-4xl font-extrabold mb-4 tracking-tight text-[#00897B] drop-shadow-lg">About SugarCraft</h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="text-lg md:text-xl text-[#4E342E] text-center leading-relaxed mb-2"
+          >
+            At SugarCraft, sweets are more than food—they’re happiness, tradition, and memories wrapped in sugar.
+          </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.4 }}
+            viewport={{ once: true }}
+            className="text-lg md:text-xl text-[#00897B] text-center leading-relaxed mb-2"
+          >
+            Our journey began with a dream: to bring joy to every moment through beautifully crafted sweets.
+          </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.6 }}
+            viewport={{ once: true }}
+            className="text-lg md:text-xl text-[#4E342E] text-center leading-relaxed mb-2"
+          >
+            Our collection blends the richness of traditional Indian mithai with the fun of modern candies and desserts.
+          </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.8 }}
+            viewport={{ once: true }}
+            className="text-lg md:text-xl text-[#00897B] text-center leading-relaxed"
+          >
+            Every sweet is prepared with care, quality ingredients, and creativity—so you taste not just sugar, but love.
+          </motion.p>
+        </motion.div>
+        {/* Decorative animated shapes */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 0.3, scale: 1 }}
+          transition={{ duration: 1.2, delay: 0.5 }}
+          className="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-gradient-to-tr from-[#F48FB1] to-[#B2DFDB] blur-2xl"
+        />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 0.3, scale: 1 }}
+          transition={{ duration: 1.2, delay: 0.7 }}
+          className="absolute -bottom-8 -left-8 w-20 h-20 rounded-full bg-gradient-to-tr from-[#B2DFDB] to-[#FFF9C4] blur-2xl"
+        />
+      </motion.section>
       {/* Featured Sweets Carousel Section */}
       <section className="py-10 px-4 mx-auto max-w-4xl w-full animate-fadeIn">
         <h2 className="text-3xl font-bold text-[#FFB74D] mb-6 text-center">Our Best Sellers</h2>
