@@ -1,3 +1,6 @@
+jest.setTimeout(30000); // increase to 30s so DB + bcrypt don’t timeout
+
+
 const mongoose = require('mongoose');
 const User = require('../src/models/User');
 const Sweet = require('../src/models/Sweet');
