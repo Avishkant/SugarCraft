@@ -9,5 +9,7 @@ router.get('/', authMiddleware, sweetController.getSweets);
 router.get('/search', authMiddleware, sweetController.searchSweets);
 router.put('/:id', authMiddleware, sweetController.updateSweet);
 router.delete('/:id', authMiddleware, adminMiddleware, sweetController.deleteSweet);
+router.post('/:id/purchase', authMiddleware, sweetController.purchaseSweet);
+router.post('/:id/restock', authMiddleware, adminMiddleware, sweetController.restockSweet);
 
 module.exports = router;
