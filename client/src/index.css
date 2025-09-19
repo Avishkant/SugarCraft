@@ -1,1 +1,27 @@
 @import "tailwindcss";
+
+:root {
+	/* Modern & Minimalist */
+	--color-bg-dark: #2A2A2A;
+	--color-bg-light: #F8F8F8;
+	--color-secondary: #D3C9BE;
+	--color-accent-rose: #C8879B;
+	--color-accent-gold: #B8A287;
+
+	/* Sophisticated & Luxurious */
+	--color-brown: #5D3C1F;
+	--color-navy: #1D2E49;
+	--color-cream: #F5F5DC;
+	--color-burgundy: #800020;
+	--color-metallic-gold: #D4AF37;
+
+	/* Playful & Professional */
+	--color-gray: #F0F0F0;
+	--color-charcoal: #4A4A4A;
+	--color-mint: #A5E3A5;
+	--color-peach: #FFDAB9;
+	--color-lavender: #D7A9E3;
+	--color-yellow: #FFD700;
+	--color-pink: #FFB6C1;
+	--color-blue: #87CEEB;
+}
