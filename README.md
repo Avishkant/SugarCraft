@@ -70,7 +70,7 @@ SugarCraft uses [Cloudinary](https://cloudinary.com/) for image upload and stora
 
 > Add screenshots of your running application here:
 >
-> ![Home Page](screenshots/home.png)
+> ![Home Page](https://github.com/Avishkant/SugarCraft/blob/main/Images/Screenshot%20(861).png?raw=true)
 > ![Carousel](screenshots/carousel.png)
 > ![Admin Dashboard](screenshots/admin_dashboard.png)
 > ![User Dashboard](screenshots/user_dashboard.png)
