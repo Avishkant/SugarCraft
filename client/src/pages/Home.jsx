@@ -137,14 +137,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Final Call-to-Action Section */}
-  <section className="w-full py-16 px-4 bg-gradient-to-r from-[#C8879B] via-[#FFD700] to-[#F8F8F8] text-center rounded-2xl mb-8">
-        <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Ready for a Sweet Escape?</h2>
-  <button className="bg-white text-[#C8879B] px-8 py-4 rounded-full font-bold shadow-xl hover:bg-[#FFD700] hover:text-white transition-all duration-250 text-lg">Find Your Perfect Treat</button>
-        <div className="mt-4">
-          <a href="#" className="text-white underline text-lg">Explore All Flavors</a>
-        </div>
-      </section>
 
       {/* Footer Section */}
       <Footer />
