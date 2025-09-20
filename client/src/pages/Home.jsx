@@ -1,3 +1,5 @@
+
+// Home page imports: motion for animation, icons, layout components, carousel, API, and assets
 import { motion } from 'framer-motion';
 import { FiArrowDownCircle } from 'react-icons/fi';
 import Navbar from '../components/Navbar';
@@ -7,7 +9,8 @@ import { useState, useEffect } from 'react';
 import { fetchSweets } from '../utils/api';
 import reactLogo from '../assets/react.svg';
 
-// Updated color palette
+
+// Color palette for consistent theming across the home page
 const COLORS = {
   primaryDark: '#2A2A2A',
   primaryLight: '#F8F8F8',
@@ -16,22 +19,26 @@ const COLORS = {
   accentGold: '#B8A287',
 };
 
+
 export default function Home() {
+  // State for best sellers carousel
   const [bestSellers, setBestSellers] = useState([]);
+
+  // Fetch best sellers from backend on mount
   useEffect(() => {
-    document.body.style.scrollSnapType = 'y mandatory';
-    const token = localStorage.getItem('token');
+    document.body.style.scrollSnapType = 'y mandatory'; // Enable scroll snap for smooth section navigation
+    const token = localStorage.getItem('token'); // Get user token if logged in
     fetchSweets(token || undefined, 1, 8)
-      .then((data) => setBestSellers(data.sweets))
-      .catch(() => setBestSellers([]));
-    return () => { document.body.style.scrollSnapType = ''; };
+      .then((data) => setBestSellers(data.sweets)) // Set carousel sweets from API
+      .catch(() => setBestSellers([])); // Fallback to empty if fetch fails
+    return () => { document.body.style.scrollSnapType = ''; }; // Cleanup scroll snap on unmount
   }, []);
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#F8F8F8] via-[#D3C9BE] to-[#F8F8F8]">
       <Navbar />
 
-      {/* Hero Section */}
+      {/* Hero Section: Main headline, CTA, and animated background */}
       <motion.section
         className="relative flex flex-col items-center justify-center w-full py-32 md:py-48 bg-gradient-to-r from-[#F8F8F8] via-[#FCE4EC] to-[#D3C9BE] rounded-b-3xl shadow-2xl mb-8 overflow-hidden"
         initial={{ opacity: 0, y: 40 }}
@@ -39,14 +46,14 @@ export default function Home() {
         transition={{ duration: 0.8, ease: [0.2, 0.9, 0.2, 1] }}
         style={{ scrollSnapAlign: 'start' }}
       >
-        {/* Geometric Shapes */}
+        {/* Decorative geometric shapes for visual interest */}
         <div className="absolute inset-0 z-0 pointer-events-none">
           <div className="absolute top-4 left-4 w-56 h-56 rounded-full bg-[#FFD700] opacity-30 animate-pulse" />
           <div className="absolute bottom-4 right-4 w-40 h-40 rounded-full bg-[#C8879B] opacity-30 animate-pulse" />
           <div className="absolute top-1/2 left-1/4 w-28 h-28 bg-[#8A2BE2] rounded-full opacity-20 animate-ping" />
           <div className="absolute bottom-1/3 right-1/4 w-32 h-32 bg-[#FCE4EC] rounded-full opacity-40 animate-ping" />
         </div>
-        {/* Headline & CTA */}
+        {/* Headline and CTA button with framer motion effects */}
         <motion.h1
           className="relative z-10 text-6xl md:text-7xl font-extrabold mb-8 text-[#2A2A2A] drop-shadow-xl text-center tracking-tight font-poppins"
           initial={{ opacity: 0, y: 40 }}
@@ -73,7 +80,7 @@ export default function Home() {
         </motion.button>
       </motion.section>
 
-      {/* Best Sellers Section */}
+      {/* Best Sellers Section: Carousel of top sweets */}
       <motion.section
         className="max-w-6xl mx-auto py-16 px-4"
         initial={{ opacity: 0 }}
@@ -85,12 +92,14 @@ export default function Home() {
           <h2 className="text-5xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#B8A287] via-[#C8879B] to-[#FFD700] drop-shadow-lg text-center tracking-tight font-poppins">
             Our Best Sellers
           </h2>
+          {/* Decorative gradient bar under section title */}
           <span className="block w-32 h-2 rounded-full bg-gradient-to-r from-[#FFD700] via-[#C8879B] to-[#B8A287] opacity-70 mt-4 animate-pulse"></span>
         </div>
+        {/* SweetCarousel displays sweets in a responsive animated carousel */}
         <SweetCarousel sweets={bestSellers} autoAdvance={true} />
       </motion.section>
 
-      {/* Why Us Section */}
+      {/* Why Us Section: Shop features grid */}
       <motion.section
         className="max-w-5xl mx-auto py-16 px-4"
         initial={{ opacity: 0, y: 40 }}
@@ -100,6 +109,7 @@ export default function Home() {
       >
         <h2 className="text-3xl md:text-4xl font-bold text-[#2A2A2A] mb-12 text-center">Why Choose Us?</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          {/* Feature cards for shop highlights */}
           {[
             { icon: '⭐', title: 'Quality Ingredients', desc: 'Freshness in Every Bite', color: 'text-yellow-500' },
             { icon: '⚡', title: 'Fast Delivery', desc: 'Sweetness, Quickly Delivered', color: 'text-pink-400' },
@@ -118,7 +128,7 @@ export default function Home() {
         </div>
       </motion.section>
 
-      {/* Testimonials Section */}
+      {/* Testimonials Section: Customer reviews */}
       <motion.section
         className="max-w-6xl mx-auto py-16 px-4 bg-gradient-to-r from-[#FCE4EC] via-[#F8F8F8] to-[#D3C9BE] rounded-3xl shadow-inner mb-16"
         initial={{ opacity: 0, y: 40 }}
@@ -128,6 +138,7 @@ export default function Home() {
       >
         <h2 className="text-3xl md:text-4xl font-bold text-[#2A2A2A] mb-12 text-center">Loved by Sweet Lovers Everywhere</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Testimonial cards with avatar, name, rating, and review */}
           {[
             { img: 'https://randomuser.me/api/portraits/women/44.jpg', name: 'Priya S.', rating: '⭐⭐⭐⭐⭐', review: 'Absolutely delicious! The cupcakes are my favorite treat.' },
             { img: 'https://randomuser.me/api/portraits/men/32.jpg', name: 'Rahul M.', rating: '⭐⭐⭐⭐⭐', review: 'Fast delivery and beautiful packaging. Highly recommend!' },
@@ -147,6 +158,7 @@ export default function Home() {
         </div>
       </motion.section>
 
+      {/* Footer: Copyright and navigation links */}
       <Footer />
     </div>
   );

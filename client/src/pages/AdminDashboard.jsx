@@ -1,4 +1,6 @@
 
+
+// AdminDashboard page imports: hooks, API utilities, animation, layout components
 import { useState, useEffect } from 'react';
 import { fetchSweets, addSweet } from '../utils/api';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -7,20 +9,31 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
 
+
 export default function AdminDashboard() {
+  // State for search input
   const [search, setSearch] = useState('');
+  // State for sweets inventory
   const [sweets, setSweets] = useState([]);
+
+  // Fetch sweets from backend on mount
   useEffect(() => {
     const token = localStorage.getItem('token');
     fetchSweets(token)
-      .then(setSweets)
+      .then(data => setSweets(Array.isArray(data) ? data : data.sweets)) // Support both array and object response
       .catch(err => console.error('Failed to fetch sweets:', err));
   }, []);
+
+  // Form state for add/edit sweet
   const [form, setForm] = useState({ name: '', category: '', price: '', quantity: '', image: null });
+  // Preview image for sweet
   const [imagePreview, setImagePreview] = useState(null);
+  // Track which sweet is being edited
   const [editId, setEditId] = useState(null);
+  // Loading state for async actions
   const [loading, setLoading] = useState(false);
-  // Edit sweet handler
+
+  // Edit sweet handler: populate form with sweet data
   const handleEdit = sweet => {
     setEditId(sweet._id);
     setForm({
@@ -33,7 +46,7 @@ export default function AdminDashboard() {
     setImagePreview(sweet.image || null);
   };
 
-  // Delete sweet handler
+  // Delete sweet handler: confirm and remove sweet from backend and state
   const handleDelete = async id => {
     if (!window.confirm('Are you sure you want to delete this sweet?')) return;
     setLoading(true);
@@ -51,11 +64,13 @@ export default function AdminDashboard() {
     setLoading(false);
   };
 
+  // Filter sweets by search input (name or category)
   const filteredSweets = sweets.filter(sweet =>
     sweet.name.toLowerCase().includes(search.toLowerCase()) ||
     sweet.category.toLowerCase().includes(search.toLowerCase())
   );
 
+  // Handle form input changes (including image upload)
   const handleChange = e => {
     const { name, value, files } = e.target;
     if (name === 'image' && files && files[0]) {
@@ -66,13 +81,14 @@ export default function AdminDashboard() {
     }
   };
 
+  // Add or update sweet in backend and state
   const handleAddOrUpdate = async e => {
     e.preventDefault();
     const token = localStorage.getItem('token');
     setLoading(true);
     try {
       if (editId) {
-        // Update sweet
+        // Update sweet: send PUT request with form data
         const formData = new FormData();
         formData.append('name', form.name);
         formData.append('category', form.category);
@@ -89,9 +105,11 @@ export default function AdminDashboard() {
         setSweets(sweets.map(s => s._id === editId ? updatedSweet : s));
         setEditId(null);
       } else {
+        // Add new sweet: send POST request
         const newSweet = await addSweet(form, token);
         setSweets([...sweets, newSweet]);
       }
+      // Reset form and image preview
       setForm({ name: '', category: '', price: '', quantity: '', image: null });
       setImagePreview(null);
     } catch (err) {
@@ -100,15 +118,18 @@ export default function AdminDashboard() {
     setLoading(false);
   };
 
+
   return (
-  <div className="min-h-screen flex flex-col bg-[var(--color-bg)]">
+    <div className="min-h-screen flex flex-col bg-[var(--color-bg)]">
       <Navbar />
       <div className="container mx-auto flex-1 py-10">
+        {/* Dashboard header and welcome message */}
         <>
           <h1 className="text-4xl font-bold text-[var(--color-primary-600)] mb-2 text-center">Admin Dashboard</h1>
           <h2 className="text-2xl text-[var(--color-btn-secondary)] mb-6 text-center">Welcome back, Sweet Master 👑 – Manage your store with ease.</h2>
+          {/* Dashboard feature cards */}
           <div className="mb-8 grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
-              <div className="bg-white border-2 border-[var(--color-btn-primary)] rounded-2xl shadow-lg p-6 flex flex-col items-center">
+            <div className="bg-white border-2 border-[var(--color-btn-primary)] rounded-2xl shadow-lg p-6 flex flex-col items-center">
               <h3 className="text-xl font-bold text-[var(--color-btn-secondary)] mb-2">Add / Edit / Delete Sweets</h3>
               <p className="text-[var(--color-primary-600)]">Manage your sweet inventory and update details.</p>
             </div>
@@ -125,6 +146,7 @@ export default function AdminDashboard() {
               <p className="text-[var(--color-primary-600)]">See who’s loving your sweets and their orders.</p>
             </div>
           </div>
+          {/* Search bar for sweets */}
           <div className="flex justify-center mb-8">
             <input
               type="text"
@@ -134,6 +156,7 @@ export default function AdminDashboard() {
               className="w-full max-w-md px-4 py-2 border border-[var(--color-btn-primary)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-btn-secondary)] transition bg-[var(--color-bg)] text-[var(--color-primary-600)]"
             />
           </div>
+          {/* Add/Edit sweet form */}
           <form className="bg-[var(--color-bg)] border-2 border-[var(--color-btn-secondary)] rounded-xl shadow-lg p-6 mb-10 max-w-xl mx-auto" onSubmit={handleAddOrUpdate}>
             <h2 className="text-2xl font-bold text-[var(--color-btn-secondary)] mb-4">{editId ? 'Update Sweet' : 'Add New Sweet'}</h2>
             <div className="grid grid-cols-2 gap-4 mb-4">
@@ -142,12 +165,14 @@ export default function AdminDashboard() {
               <input type="number" name="price" value={form.price} onChange={handleChange} placeholder="Price" required className="px-4 py-2 border border-[var(--color-btn-primary)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-btn-secondary)] transition bg-[var(--color-bg)] text-[var(--color-primary-600)]" />
               <input type="number" name="quantity" value={form.quantity} onChange={handleChange} placeholder="Quantity" required className="px-4 py-2 border border-[var(--color-btn-primary)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-btn-secondary)] transition bg-[var(--color-bg)] text-[var(--color-primary-600)]" />
               <input type="file" name="image" accept="image/*" onChange={handleChange} className="col-span-2 px-4 py-2 border border-[var(--color-btn-primary)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-btn-secondary)] transition bg-[var(--color-bg)] text-[var(--color-primary-600)]" />
+              {/* Image preview for sweet */}
               {imagePreview && (
                 <img src={imagePreview} alt="Preview" className="col-span-2 mt-2 rounded-lg shadow-md max-h-32 object-contain" />
               )}
             </div>
             <button type="submit" className="w-full bg-[var(--color-btn-primary)] text-[var(--color-btn-text)] py-2 rounded-lg font-semibold shadow-lg hover:bg-[var(--color-btn-primary-hover)] hover:text-[var(--color-btn-text-alt)] transition disabled:opacity-50">{editId ? 'Update Sweet' : 'Add Sweet'}</button>
           </form>
+          {/* Sweets grid: display filtered sweets with edit/delete actions */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <AnimatePresence>
               {filteredSweets.length === 0 ? (
@@ -163,6 +188,7 @@ export default function AdminDashboard() {
                     whileHover={{ scale: 1.04, boxShadow: '0 8px 32px #FFB74D55' }}
                     className="bg-[var(--color-bg)] border-2 border-[var(--color-btn-secondary)] rounded-xl shadow-lg p-6 flex flex-col items-center relative overflow-hidden group"
                   >
+                    {/* Sweet image preview */}
                     {sweet.image && (
                       <motion.img
                         src={sweet.image}
@@ -173,10 +199,12 @@ export default function AdminDashboard() {
                         transition={{ duration: 0.5 }}
                       />
                     )}
+                    {/* Sweet details */}
                     <h2 className="text-2xl font-bold text-[var(--color-primary-600)] mb-2 group-hover:text-[var(--color-btn-secondary)] transition-colors duration-300">{sweet.name}</h2>
                     <p className="text-[var(--color-btn-secondary)] mb-1">Category: {sweet.category}</p>
                     <p className="text-[var(--color-primary-600)] font-semibold mb-2">Price: ₹{sweet.price}</p>
                     <p className="text-[var(--color-btn-primary-hover)] mb-2">In stock: {sweet.quantity}</p>
+                    {/* Edit and Delete buttons for sweet */}
                     <motion.div className="flex gap-2 mt-2"
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -185,6 +213,7 @@ export default function AdminDashboard() {
                       <button onClick={() => handleEdit(sweet)} disabled={loading} className="px-3 py-1 rounded-lg bg-[var(--color-btn-primary)] text-[var(--color-btn-text)] font-semibold shadow hover:bg-[var(--color-btn-primary-hover)] hover:text-[var(--color-btn-text-alt)] hover:scale-110 transition-transform duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--color-btn-secondary)]">Edit</button>
                       <button onClick={() => handleDelete(sweet._id)} disabled={loading} className="px-3 py-1 rounded-lg bg-[var(--color-btn-secondary)] text-[var(--color-btn-text-alt)] font-semibold shadow hover:bg-[var(--color-btn-secondary-hover)] hover:text-[var(--color-btn-text)] hover:scale-110 transition-transform duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--color-btn-secondary)]">Delete</button>
                     </motion.div>
+                    {/* Editing indicator for sweet */}
                     {editId === sweet._id && (
                       <span className="absolute top-2 right-2 bg-[var(--color-btn-secondary)] text-[var(--color-primary-600)] px-2 py-1 rounded shadow animate-pulse">Editing</span>
                     )}
@@ -194,6 +223,7 @@ export default function AdminDashboard() {
             </AnimatePresence>
           </div>
         </>
+        {/* Footer for copyright and navigation */}
         <Footer />
       </div>
     </div>

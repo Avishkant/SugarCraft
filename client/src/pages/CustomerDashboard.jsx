@@ -1,23 +1,32 @@
 
+
+// CustomerDashboard page imports: hooks, animation, layout components
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
+
+// Sample sweets data for demo purposes
 const sweets = [
   { _id: '1', name: 'Chocolate Truffle', category: 'Chocolate', price: 120, quantity: 10, tagline: 'Rich, creamy, irresistible.' },
   { _id: '2', name: 'Strawberry Tart', category: 'Fruit', price: 90, quantity: 5, tagline: 'Fresh and tangy delight.' },
   { _id: '3', name: 'Lemon Meringue', category: 'Citrus', price: 100, quantity: 0, tagline: 'Zesty, sweet, and fluffy.' },
 ];
 
+
 export default function CustomerDashboard() {
+  // State for customer name (from JWT)
   const [customerName, setCustomerName] = useState('');
+  // State for cart items
   const [cart, setCart] = useState([]);
+  // Toast notification for purchase
   const [showToast, setShowToast] = useState(false);
+  // Sweets list (inventory)
   const [sweetList, setSweetList] = useState(sweets);
 
+  // On mount, extract customer name from JWT token
   useEffect(() => {
-    // Get name from JWT token
     const token = localStorage.getItem('token');
     if (token) {
       try {
@@ -29,9 +38,9 @@ export default function CustomerDashboard() {
     }
   }, []);
 
-  // Add to cart handler
+  // Add sweet to cart, increment quantity if already present
   const handleAddToCart = sweet => {
-    if (sweet.quantity === 0) return;
+    if (sweet.quantity === 0) return; // Don't add if out of stock
     setCart(prev => {
       const found = prev.find(item => item._id === sweet._id);
       if (found) {
@@ -43,17 +52,17 @@ export default function CustomerDashboard() {
     });
   };
 
-  // Update cart quantity
+  // Update cart quantity for a sweet
   const updateCartQty = (id, qty) => {
     setCart(prev => prev.map(item => item._id === id ? { ...item, cartQty: qty } : item));
   };
 
-  // Remove from cart
+  // Remove sweet from cart
   const removeFromCart = id => {
     setCart(prev => prev.filter(item => item._id !== id));
   };
 
-  // Purchase handler
+  // Simulate purchase: update sweets stock, clear cart, and show toast
   const handlePurchase = () => {
     setSweetList(prev => prev.map(sweet => {
       const cartItem = cart.find(item => item._id === sweet._id);
@@ -67,13 +76,15 @@ export default function CustomerDashboard() {
     setTimeout(() => setShowToast(false), 3000);
   };
 
+  // Calculate total price of items in cart
   const totalPrice = cart.reduce((sum, item) => sum + item.price * item.cartQty, 0);
+
 
   return (
     <div className="min-h-screen flex flex-col bg-[var(--color-bg)]">
       <Navbar />
       <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="container mx-auto flex-1 py-10">
-        {/* Hero Section */}
+        {/* Hero Section: welcome and CTA */}
         <section className="flex flex-col items-center justify-center py-12 mb-8 rounded-2xl shadow-xl bg-white bg-opacity-90 animate-fadeIn">
           <h1 className="text-5xl font-extrabold text-[var(--color-primary-600)] mb-2 text-center drop-shadow-lg">Welcome back, {customerName} 🍬</h1>
           <p className="text-xl text-[var(--color-primary-600)] mb-6 text-center">Craving something sweet today? Explore our fresh collection.</p>
@@ -81,7 +92,7 @@ export default function CustomerDashboard() {
             <button className="bg-[var(--color-btn-primary)] text-[var(--color-btn-text)] px-6 py-3 rounded-full font-bold shadow-lg hover:bg-[var(--color-btn-primary-hover)] hover:text-[var(--color-btn-text-alt)] transition" onClick={() => window.location.href='/sweets'}>🍭 Browse Sweets</button>
           </div>
         </section>
-        {/* Sweets Grid */}
+        {/* Sweets Grid: display available sweets */}
         <section className="mb-12">
           <h2 className="text-3xl font-bold text-[var(--color-primary-600)] mb-6 text-center">Available Sweets</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -93,6 +104,7 @@ export default function CustomerDashboard() {
                 <p className="text-[var(--color-primary-600)] mb-2">₹{sweet.price}</p>
                 <p className="text-[var(--color-btn-primary-hover)] mb-2">{sweet.tagline}</p>
                 <p className="text-[var(--color-btn-secondary)] mb-2">In stock: {sweet.quantity}</p>
+                {/* Add to cart or sold out button */}
                 {sweet.quantity === 0 ? (
                   <button className="px-4 py-2 rounded-lg bg-gray-300 text-gray-500 font-semibold shadow cursor-not-allowed" disabled>Sold Out</button>
                 ) : (
@@ -102,7 +114,7 @@ export default function CustomerDashboard() {
             ))}
           </div>
         </section>
-        {/* Cart Section */}
+        {/* Cart Section: show cart items and purchase button */}
         {cart.length > 0 && (
           <section className="mb-12">
             <h2 className="text-3xl font-bold text-[var(--color-btn-secondary)] mb-6 text-center">Your Cart</h2>
@@ -114,9 +126,11 @@ export default function CustomerDashboard() {
                     <span className="ml-2 text-[var(--color-btn-secondary)]">₹{item.price}</span>
                   </div>
                   <div className="flex items-center gap-2">
+                    {/* Quantity controls */}
                     <button className="px-2 py-1 rounded bg-[var(--color-btn-secondary)] text-[var(--color-btn-text-alt)]" onClick={() => updateCartQty(item._id, Math.max(1, item.cartQty - 1))} disabled={item.cartQty <= 1}>-</button>
                     <span className="px-3">{item.cartQty}</span>
                     <button className="px-2 py-1 rounded bg-[var(--color-btn-secondary)] text-[var(--color-btn-text-alt)]" onClick={() => updateCartQty(item._id, Math.min(item.cartQty + 1, sweetList.find(s => s._id === item._id)?.quantity || 1))} disabled={item.cartQty >= (sweetList.find(s => s._id === item._id)?.quantity || 1)}>+</button>
+                    {/* Remove from cart button */}
                     <button className="ml-2 px-2 py-1 rounded bg-red-200 text-red-700" onClick={() => removeFromCart(item._id)}>Remove</button>
                   </div>
                 </div>
@@ -128,19 +142,20 @@ export default function CustomerDashboard() {
             </div>
           </section>
         )}
-        {/* About Section */}
+        {/* About Section: brand story */}
         <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="py-8 px-4 bg-white bg-opacity-95 rounded-xl shadow-md mx-auto max-w-2xl mb-10 animate-fadeIn">
           <h2 className="text-2xl font-bold text-[var(--color-primary-600)] mb-3">At SugarCraft, every sweet has a story.</h2>
           <p className="text-lg text-[var(--color-primary-600)]">From traditional mithai to modern delights, we craft happiness for every moment.</p>
         </motion.section>
       </motion.div>
-      {/* Toast Notification */}
+      {/* Toast Notification for purchase */}
       {showToast && (
         <div className="fixed bottom-8 right-8 z-50 bg-[var(--color-btn-primary)] text-[var(--color-btn-text)] px-6 py-3 rounded-2xl shadow-lg flex items-center gap-2 animate-fadeIn">
           <span className="font-bold text-lg">🎉 Order placed!</span>
           <span className="text-sm">Your sweets are on the way.</span>
         </div>
       )}
+      {/* Footer for copyright and navigation */}
       <Footer />
     </div>
   );

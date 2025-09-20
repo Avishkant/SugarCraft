@@ -1,3 +1,5 @@
+
+// Sweets page imports: hooks, API, animation, card, layout components
 import { useState, useEffect, useRef } from 'react';
 import { fetchSweets } from '../utils/api';
 import { motion } from 'framer-motion';
@@ -5,16 +7,19 @@ import SweetCard from '../components/SweetCard';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
+
 export default function Sweets() {
+  // State for sweets list, pagination, infinite scroll, filters, cart, and toast
   const [sweets, setSweets] = useState([]);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const loader = useRef(null);
-  const [search, setSearch] = useState('');
-  const [category, setCategory] = useState('');
-  const [minPrice, setMinPrice] = useState('');
-  const [maxPrice, setMaxPrice] = useState('');
-  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1); // Current page for infinite scroll
+  const [hasMore, setHasMore] = useState(true); // If more sweets to load
+  const loader = useRef(null); // Ref for intersection observer
+  const [search, setSearch] = useState(''); // Search filter
+  const [category, setCategory] = useState(''); // Category filter
+  const [minPrice, setMinPrice] = useState(''); // Min price filter
+  const [maxPrice, setMaxPrice] = useState(''); // Max price filter
+  const [loading, setLoading] = useState(true); // Loading state
+  // Cart state, initialized from localStorage
   const [cart, setCart] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem('cart')) || [];
@@ -22,8 +27,10 @@ export default function Sweets() {
       return [];
     }
   });
-  const [showToast, setShowToast] = useState(false);
+  const [showToast, setShowToast] = useState(false); // Toast notification
 
+
+  // Fetch sweets from backend when page changes (infinite scroll)
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -33,13 +40,15 @@ export default function Sweets() {
     setLoading(true);
     fetchSweets(token, page, 12)
       .then((data) => {
-        setSweets((prev) => [...prev, ...data.sweets]);
-        setHasMore(data.hasMore);
+        setSweets((prev) => [...prev, ...data.sweets]); // Append new sweets
+        setHasMore(data.hasMore); // If more sweets available
         setLoading(false);
       })
       .catch(() => setLoading(false));
   }, [page]);
 
+
+  // Infinite scroll: observe loader ref to load more sweets when visible
   useEffect(() => {
     if (!hasMore) return;
     const observer = new window.IntersectionObserver((entries) => {
@@ -51,6 +60,8 @@ export default function Sweets() {
     return () => observer.disconnect();
   }, [hasMore]);
 
+
+  // Filter sweets by search, category, and price
   const filtered = sweets.filter((sweet) => {
     const matchesSearch = sweet.name.toLowerCase().includes(search.toLowerCase());
     const matchesCategory = category ? sweet.category === category : true;
@@ -59,30 +70,34 @@ export default function Sweets() {
     return matchesSearch && matchesCategory && matchesMin && matchesMax;
   });
 
-  // Add to cart handler
+
+  // Add sweet to cart, update localStorage, and show toast
   const handleAddToCart = (sweet) => {
-    if (sweet.quantity === 0) return;
+    if (sweet.quantity === 0) return; // Don't add if out of stock
     setCart((prev) => {
       const found = prev.find((item) => item._id === sweet._id);
       let updated;
       if (found) {
+        // If already in cart, increment quantity (up to stock limit)
         updated = prev.map((item) =>
           item._id === sweet._id
             ? { ...item, cartQty: Math.min(item.cartQty + 1, sweet.quantity) }
             : item
         );
       } else {
+        // If not in cart, add with quantity 1
         updated = [...prev, { ...sweet, cartQty: 1 }];
       }
       localStorage.setItem('cart', JSON.stringify(updated));
       window.dispatchEvent(new Event('storage'));
       return updated;
     });
-    setShowToast(`"${sweet.name}" added to cart!`);
+    setShowToast(`"${sweet.name}" added to cart!`); // Show toast notification
     setTimeout(() => setShowToast(false), 2000);
   };
 
-  // Update cart quantity
+
+  // Update cart quantity for a sweet
   const updateCartQty = (id, qty) => {
     setCart((prev) => {
       const updated = prev.map((item) =>
@@ -94,7 +109,8 @@ export default function Sweets() {
     });
   };
 
-  // Remove from cart
+
+  // Remove sweet from cart
   const removeFromCart = (id) => {
     setCart((prev) => {
       const updated = prev.filter((item) => item._id !== id);
@@ -104,7 +120,8 @@ export default function Sweets() {
     });
   };
 
-  // Purchase handler
+
+  // Simulate purchase: update sweets stock, clear cart, and show toast
   const handlePurchase = () => {
     setSweets((prev) =>
       prev.map((sweet) => {
@@ -125,12 +142,16 @@ export default function Sweets() {
     setTimeout(() => setShowToast(false), 3000);
   };
 
+
+  // Calculate total price of items in cart
   const totalPrice = cart.reduce((sum, item) => sum + item.price * item.cartQty, 0);
+
 
   return (
     <div className="min-h-screen flex flex-col bg-[var(--color-bg)]">
       <Navbar />
       <div className="w-full flex-1 py-6 px-2 sm:px-4 mx-auto min-w-0">
+        {/* Page Title with animation */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -139,7 +160,7 @@ export default function Sweets() {
         >
           Shop Sweets
         </motion.h1>
-        {/* Filter / Search Bar */}
+        {/* Filter / Search Bar for sweets */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -181,6 +202,7 @@ export default function Sweets() {
           />
         </motion.div>
 
+        {/* If not logged in, prompt to login to view sweets */}
         {!localStorage.getItem('token') ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -200,7 +222,7 @@ export default function Sweets() {
           </motion.div>
         ) : (
           <>
-            {/* Sweets Grid */}
+            {/* Sweets Grid: displays filtered sweets in animated grid */}
             <motion.div
               initial="hidden"
               animate="visible"
@@ -228,6 +250,7 @@ export default function Sweets() {
                   </motion.div>
                 ))
               )}
+              {/* Loader for infinite scroll */}
               <div ref={loader} className="col-span-full text-center py-4">
                 {loading && hasMore && (
                   <span className="text-[#6366f1]">Loading more sweets...</span>
@@ -237,13 +260,14 @@ export default function Sweets() {
           </>
         )}
       </div>
-      {/* Toast Notification */}
+      {/* Toast Notification for cart actions */}
       {showToast && (
         <div className="fixed bottom-8 right-8 z-50 bg-[var(--color-btn-primary)] text-[var(--color-btn-text)] px-6 py-3 rounded-2xl shadow-lg flex items-center gap-2 animate-fadeIn">
           <span className="font-bold text-lg">🛒 {showToast}</span>
         </div>
       )}
+      {/* Footer for copyright and navigation */}
       <Footer />
     </div>
   );
-}
+};
