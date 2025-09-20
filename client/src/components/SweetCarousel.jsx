@@ -5,7 +5,23 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function SweetCarousel({ sweets, autoAdvance = false }) {
   const [index, setIndex] = useState(0);
-  const cardsToShow = 3;
+  const [cardsToShow, setCardsToShow] = useState(3);
+
+  // Responsive cardsToShow
+  useEffect(() => {
+    function handleResize() {
+      if (window.innerWidth < 640) {
+        setCardsToShow(1);
+      } else if (window.innerWidth < 768) {
+        setCardsToShow(2);
+      } else {
+        setCardsToShow(3);
+      }
+    }
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     if (!autoAdvance || sweets.length <= cardsToShow) return;
