@@ -69,13 +69,15 @@ SugarCraft uses [Cloudinary](https://cloudinary.com/) for image upload and stora
 ## Screenshots
 
 > Add screenshots of your running application here:
->
-> ![Home Page](screenshots/home.png)
-> ![Carousel](screenshots/carousel.png)
-> ![Admin Dashboard](screenshots/admin_dashboard.png)
-> ![User Dashboard](screenshots/user_dashboard.png)
-> ![Sweets](screenshots/sweets.png)
-> ![Cart](screenshots/cart.png)
+> #Home page
+> ![Home Page](https://github.com/Avishkant/SugarCraft/blob/main/Images/Screenshot%20(861).png?raw=true)
+> ![Carousel](https://github.com/Avishkant/SugarCraft/blob/main/Images/Screenshot%20(862).png?raw=true)
+> ![Registration Page](https://github.com/Avishkant/SugarCraft/blob/main/Images/Screenshot%20(864).png?raw=true)
+> ![Login](https://github.com/Avishkant/SugarCraft/blob/main/Images/Screenshot%20(863).png?raw=true)
+> ![Admin Dashboard](https://github.com/Avishkant/SugarCraft/blob/main/Images/Screenshot%20(868).png?raw=true)
+> ![User Dashboard](https://github.com/Avishkant/SugarCraft/blob/main/Images/Screenshot%20(865).png?raw=true)
+> ![Sweets](https://github.com/Avishkant/SugarCraft/blob/main/Images/Screenshot%20(866).png?raw=true)
+> ![Cart](https://github.com/Avishkant/SugarCraft/blob/main/Images/Screenshot%20(867).png?raw=true)
 
 ---
 
