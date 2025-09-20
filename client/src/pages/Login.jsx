@@ -23,7 +23,8 @@ export default function Login() {
     setSuccess('');
     try {
       const res = await loginUser(form);
-      localStorage.setItem('token', res.token);
+  localStorage.setItem('token', res.token);
+  localStorage.setItem('role', res.role);
       setSuccess('Login successful!');
       setForm({ email: '', password: '' });
       // Redirect based on role
@@ -54,12 +55,12 @@ export default function Login() {
           </div>
           {error && <div className="text-[#FFD700] mb-4 text-center animate-shake">{error}</div>}
           {success && <div className="text-[#A5E3A5] mb-4 text-center animate-fadeIn">{success}</div>}
-          <button type="submit" className="w-full bg-gradient-to-r from-[#FFB6C1] to-[#A5E3A5] text-[#4A4A4A] py-2 rounded-lg font-semibold shadow-lg hover:scale-105 transition disabled:opacity-50" disabled={loading}>
+          <button type="submit" className="w-full bg-[var(--color-btn-primary)] text-[var(--color-btn-text)] py-2 rounded-lg font-semibold shadow-lg hover:bg-[var(--color-btn-primary-hover)] hover:text-[var(--color-btn-text-alt)] transition disabled:opacity-50" disabled={loading}>
             {loading ? 'Logging in...' : 'Login'}
           </button>
           <div className="mt-4 text-center">
             <span className="text-[#795548]">Don't have an account? </span>
-            <a href="/register" className="text-[#FFB74D] hover:underline font-semibold">Sign Up</a>
+            <a href="/register" className="bg-[var(--color-btn-secondary)] text-[var(--color-btn-text-alt)] px-4 py-2 rounded-lg font-semibold hover:bg-[var(--color-btn-secondary-hover)] hover:text-[var(--color-btn-text)] transition">Sign Up</a>
           </div>
         </form>
       </div>

@@ -57,7 +57,7 @@ export default function Sweets() {
         ) : !localStorage.getItem('token') ? (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="flex flex-col items-center justify-center py-20">
             <h2 className="text-3xl font-bold text-[#f43f5e] mb-4">Login to view sweets</h2>
-            <button onClick={() => window.location.href='/login'} className="bg-gradient-to-r from-[#6366f1] to-[#06b6d4] text-white px-6 py-3 rounded-full font-bold shadow-lg hover:scale-105 transition">Login</button>
+            <button onClick={() => window.location.href='/login'} className="bg-[var(--color-btn-primary)] text-[var(--color-btn-text)] px-6 py-3 rounded-full font-bold shadow-lg hover:bg-[var(--color-btn-primary-hover)] hover:text-[var(--color-btn-text-alt)] hover:scale-105 transition">Login</button>
           </motion.div>
         ) : (
           <motion.div initial="hidden" animate="visible" variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.08 } } }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -71,8 +71,8 @@ export default function Sweets() {
                   <p className="text-[#06b6d4] mb-1">{sweet.category}</p>
                   <p className="text-[#334155] mb-2">₹{sweet.price}</p>
                   <div className="flex gap-2 mt-2">
-                    <button className="px-3 py-1 rounded-lg bg-gradient-to-r from-[#6366f1] to-[#06b6d4] text-white font-semibold shadow hover:scale-105 transition">Add to Cart</button>
-                    <button className="px-3 py-1 rounded-lg bg-gradient-to-r from-[#f43f5e] to-[#f59e42] text-white font-semibold shadow hover:scale-105 transition">Add to Wishlist</button>
+                    <button className="px-3 py-1 rounded-lg bg-[var(--color-btn-primary)] text-[var(--color-btn-text)] font-semibold shadow hover:bg-[var(--color-btn-primary-hover)] hover:text-[var(--color-btn-text-alt)] hover:scale-105 transition">Add to Cart</button>
+                    <button className="px-3 py-1 rounded-lg bg-[var(--color-btn-secondary)] text-[var(--color-btn-text-alt)] font-semibold shadow hover:bg-[var(--color-btn-secondary-hover)] hover:text-[var(--color-btn-text)] hover:scale-105 transition">Add to Wishlist</button>
                   </div>
                 </motion.div>
               ))

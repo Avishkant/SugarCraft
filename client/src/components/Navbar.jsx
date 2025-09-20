@@ -6,18 +6,24 @@ const SugarCraftLogo = 'https://res.cloudinary.com/dxt4hudrn/image/upload/v17582
 export default function Navbar() {
   const navigate = useNavigate ? useNavigate() : () => {};
   const [loggedIn, setLoggedIn] = useState(false);
+  const [role, setRole] = useState('');
 
   useEffect(() => {
     setLoggedIn(!!localStorage.getItem('token'));
-    window.addEventListener('storage', () => {
+    setRole(localStorage.getItem('role') || '');
+    const handleStorage = () => {
       setLoggedIn(!!localStorage.getItem('token'));
-    });
-    return () => window.removeEventListener('storage', () => {});
+      setRole(localStorage.getItem('role') || '');
+    };
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('role');
     setLoggedIn(false);
+    setRole('');
     navigate('/login');
   };
 
@@ -40,16 +46,26 @@ export default function Navbar() {
             className="px-4 py-2 rounded-lg font-semibold bg-transparent text-[#2A2A2A] transition"
             onClick={() => navigate('/about')}
           >About</motion.button>
-          <motion.button
-            whileHover={{ scale: 1.12, backgroundColor: '#C8879B', color: '#fff', boxShadow: '0 4px 16px #C8879B55' }}
-            whileTap={{ scale: 0.97 }}
-            className="px-4 py-2 rounded-lg font-semibold bg-transparent text-[#2A2A2A] transition"
-            onClick={() => navigate('/sweets')}
-          >Sweets</motion.button>
+          {role !== 'admin' && (
+            <motion.button
+              whileHover={{ scale: 1.12, backgroundColor: '#C8879B', color: '#fff', boxShadow: '0 4px 16px #C8879B55' }}
+              whileTap={{ scale: 0.97 }}
+              className="px-4 py-2 rounded-lg font-semibold bg-transparent text-[#2A2A2A] transition"
+              onClick={() => navigate('/sweets')}
+            >Sweets</motion.button>
+          )}
+          {role === 'admin' && (
+            <motion.button
+              whileHover={{ scale: 1.12, backgroundColor: '#B8A287', color: '#2A2A2A', boxShadow: '0 4px 16px #B8A28755' }}
+              whileTap={{ scale: 0.97 }}
+              className="px-4 py-2 rounded-lg font-semibold bg-transparent text-[#2A2A2A] transition"
+              onClick={() => navigate('/admin')}
+            >Admin Dashboard</motion.button>
+          )}
           {!loggedIn && (
             <>
-              <motion.button whileHover={{ scale: 1.08, backgroundColor: '#C8879B', color: '#fff' }} whileTap={{ scale: 0.97 }} onClick={() => navigate('/login')} className="bg-[#C8879B] text-white px-4 py-2 rounded-lg font-semibold hover:bg-[#B8A287] hover:text-[#2A2A2A] transition">Login</motion.button>
-              <motion.button whileHover={{ scale: 1.08, backgroundColor: '#B8A287', color: '#2A2A2A' }} whileTap={{ scale: 0.97 }} onClick={() => navigate('/register')} className="bg-[#B8A287] text-[#2A2A2A] px-4 py-2 rounded-lg font-semibold hover:bg-[#C8879B] hover:text-white transition">Sign Up</motion.button>
+              <motion.button whileHover={{ scale: 1.08, backgroundColor: 'var(--color-btn-primary-hover)', color: 'var(--color-btn-text-alt)' }} whileTap={{ scale: 0.97 }} onClick={() => navigate('/login')} className="bg-[var(--color-btn-primary)] text-[var(--color-btn-text)] px-4 py-2 rounded-lg font-semibold hover:bg-[var(--color-btn-primary-hover)] hover:text-[var(--color-btn-text-alt)] transition">Login</motion.button>
+              <motion.button whileHover={{ scale: 1.08, backgroundColor: 'var(--color-btn-secondary-hover)', color: 'var(--color-btn-text)]' }} whileTap={{ scale: 0.97 }} onClick={() => navigate('/register')} className="bg-[var(--color-btn-secondary)] text-[var(--color-btn-text-alt)] px-4 py-2 rounded-lg font-semibold hover:bg-[var(--color-btn-secondary-hover)] hover:text-[var(--color-btn-text)] transition">Sign Up</motion.button>
             </>
           )}
           {loggedIn && (

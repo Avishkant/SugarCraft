@@ -21,8 +21,9 @@ export default function Register() {
     setSuccess('');
     try {
       await registerUser(form);
+      localStorage.removeItem('role');
       setSuccess('Registration successful! You can now login.');
-  setForm({ name: '', email: '', password: '' });
+      setForm({ name: '', email: '', password: '' });
     } catch (err) {
       setError(err.message);
     }
@@ -49,12 +50,12 @@ export default function Register() {
           </div>
           {error && <div className="text-[#FFD700] mb-4 text-center animate-shake">{error}</div>}
           {success && <div className="text-[#A5E3A5] mb-4 text-center animate-fadeIn">{success}</div>}
-          <button type="submit" className="w-full bg-gradient-to-r from-[#FFB6C1] to-[#A5E3A5] text-[#4A4A4A] py-2 rounded-lg font-semibold shadow-lg hover:scale-105 transition disabled:opacity-50" disabled={loading}>
+          <button type="submit" className="w-full bg-[var(--color-btn-primary)] text-[var(--color-btn-text)] py-2 rounded-lg font-semibold shadow-lg hover:bg-[var(--color-btn-primary-hover)] hover:text-[var(--color-btn-text-alt)] transition disabled:opacity-50" disabled={loading}>
             {loading ? 'Signing up...' : 'Sign Up'}
           </button>
           <div className="mt-4 text-center">
             <span className="text-[#795548]">Already have an account? </span>
-            <a href="/login" className="text-[#FFB74D] hover:underline font-semibold">Login</a>
+            <a href="/login" className="bg-[var(--color-btn-secondary)] text-[var(--color-btn-text-alt)] px-4 py-2 rounded-lg font-semibold hover:bg-[var(--color-btn-secondary-hover)] hover:text-[var(--color-btn-text)] transition">Login</a>
           </div>
         </form>
       </div>

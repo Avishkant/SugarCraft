@@ -39,23 +39,50 @@ export default function CustomerDashboard() {
           </div>
         </section>
         {/* Highlights / Quick Actions */}
-        <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-          <div className="bg-gradient-to-br from-[#e0e7ff] to-[#6366f1] rounded-xl shadow-lg p-6 flex flex-col items-center">
-            <span className="text-3xl mb-2">🎁</span>
-            <h3 className="text-xl font-bold text-[#6366f1] mb-2">Today's Offers</h3>
-            <p className="text-[#334155]">Special discounts on best sellers!</p>
-          </div>
-          <div className="bg-gradient-to-br from-[#f0fdfa] to-[#06b6d4] rounded-xl shadow-lg p-6 flex flex-col items-center">
-            <span className="text-3xl mb-2">🛒</span>
-            <h3 className="text-xl font-bold text-[#06b6d4] mb-2">Your Last Purchase</h3>
-            <button className="mt-2 bg-gradient-to-r from-[#6366f1] to-[#06b6d4] text-white px-4 py-2 rounded-lg font-semibold shadow hover:scale-105 transition">Reorder</button>
-          </div>
-          <div className="bg-gradient-to-br from-[#f0fdfa] to-[#f43f5e] rounded-xl shadow-lg p-6 flex flex-col items-center">
-            <span className="text-3xl mb-2">🌟</span>
-            <h3 className="text-xl font-bold text-[#f43f5e] mb-2">Recommended for You</h3>
-            <p className="text-[#334155]">Handpicked sweets based on your taste!</p>
-          </div>
-        </motion.section>
+          <motion.section
+            className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={{
+              hidden: {},
+              visible: { transition: { staggerChildren: 0.18 } }
+            }}
+          >
+            <motion.div
+              className="bg-white/80 backdrop-blur-xl border-2 border-[#C8879B] rounded-2xl shadow-2xl p-8 flex flex-col items-center transition-all duration-300 hover:scale-105 hover:shadow-3xl"
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7 }}
+            >
+              <span className="text-4xl mb-4 text-[#C8879B] animate-bounce">🎁</span>
+              <h3 className="text-2xl font-bold text-[#3B3B3B] mb-2">Today's Offers</h3>
+              <p className="text-[#6B6B6B] mb-2">Special discounts on best sellers!</p>
+              <button className="mt-2 bg-[#C8879B] text-white px-6 py-2 rounded-lg font-semibold shadow hover:bg-[#B8A287] hover:text-[#2A2A2A] transition">View Offers</button>
+            </motion.div>
+            <motion.div
+              className="bg-white/80 backdrop-blur-xl border-2 border-[#B8A287] rounded-2xl shadow-2xl p-8 flex flex-col items-center transition-all duration-300 hover:scale-105 hover:shadow-3xl"
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.15 }}
+            >
+              <span className="text-4xl mb-4 text-[#B8A287] animate-bounce">🛒</span>
+              <h3 className="text-2xl font-bold text-[#3B3B3B] mb-2">Your Last Purchase</h3>
+              <p className="text-[#6B6B6B] mb-2">Quickly reorder your favorites.</p>
+              <button className="mt-2 bg-[#B8A287] text-[#2A2A2A] px-6 py-2 rounded-lg font-semibold shadow hover:bg-[#C8879B] hover:text-white transition">Reorder</button>
+            </motion.div>
+            <motion.div
+              className="bg-white/80 backdrop-blur-xl border-2 border-[#C8879B] rounded-2xl shadow-2xl p-8 flex flex-col items-center transition-all duration-300 hover:scale-105 hover:shadow-3xl"
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.3 }}
+            >
+              <span className="text-4xl mb-4 text-[#C8879B] animate-bounce">🌟</span>
+              <h3 className="text-2xl font-bold text-[#3B3B3B] mb-2">Recommended for You</h3>
+              <p className="text-[#6B6B6B] mb-2">Handpicked sweets based on your taste!</p>
+              <button className="mt-2 bg-[#C8879B] text-white px-6 py-2 rounded-lg font-semibold shadow hover:bg-[#B8A287] hover:text-[#2A2A2A] transition">See Recommendations</button>
+            </motion.div>
+          </motion.section>
         {/* About Section */}
         <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="py-8 px-4 bg-white bg-opacity-95 rounded-xl shadow-md mx-auto max-w-2xl mb-10 animate-fadeIn">
           <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#6366f1] via-[#06b6d4] to-[#f43f5e] mb-3">At SugarCraft, every sweet has a story.</h2>

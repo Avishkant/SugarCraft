@@ -5,9 +5,9 @@ export default function Footer() {
       <div className="container mx-auto text-center">
         <p className="mb-2">&copy; {new Date().getFullYear()} SugarCraft Sweet Shop. All rights reserved.</p>
         <div className="flex justify-center gap-4">
-          <a href="#" className="hover:text-[#FFB74D] transition">Instagram</a>
-          <a href="#" className="hover:text-[#FFB74D] transition">Facebook</a>
-          <a href="#" className="hover:text-[#FFB74D] transition">Contact</a>
+          <a href="#" className="hover:text-[var(--color-btn-primary)] transition">Instagram</a>
+          <a href="#" className="hover:text-[var(--color-btn-primary)] transition">Facebook</a>
+          <a href="#" className="hover:text-[var(--color-btn-secondary)] transition">Contact</a>
         </div>
       </div>
     </footer>

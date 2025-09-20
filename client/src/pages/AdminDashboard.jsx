@@ -108,7 +108,7 @@ export default function AdminDashboard() {
           <h1 className="text-4xl font-bold text-[#3E2723] mb-2 text-center">Admin Dashboard</h1>
           <h2 className="text-2xl text-[#FFB74D] mb-6 text-center">Welcome back, Sweet Master 👑 – Manage your store with ease.</h2>
           <div className="mb-8 grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
-            <div className="bg-[#FFF8F0] border-2 border-[#795548] rounded-xl shadow-lg p-6">
+              <div className="bg-white border-2 border-[#C8879B] rounded-2xl shadow-lg p-6 flex flex-col items-center">
               <h3 className="text-xl font-bold text-[#795548] mb-2">Add / Edit / Delete Sweets</h3>
               <p className="text-[#3E2723]">Manage your sweet inventory and update details.</p>
             </div>

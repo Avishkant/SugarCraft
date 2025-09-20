@@ -1,6 +1,13 @@
 @import "tailwindcss";
 
 :root {
+	/* Global Button Colors */
+	--color-btn-primary: #C8879B;
+	--color-btn-primary-hover: #B8A287;
+	--color-btn-secondary: #B8A287;
+	--color-btn-secondary-hover: #C8879B;
+	--color-btn-text: #fff;
+	--color-btn-text-alt: #2A2A2A;
 	/* Modern & Minimalist */
 	--color-bg-dark: #2A2A2A;
 	--color-bg-light: #F8F8F8;
