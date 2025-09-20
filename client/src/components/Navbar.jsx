@@ -1,10 +1,11 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 const SugarCraftLogo = 'https://res.cloudinary.com/dxt4hudrn/image/upload/v1758212653/sweets/Gemini_Generated_Image_w8vwd9w8vwd9w8vw_o8xhnp.png';
 
 export default function Navbar() {
   const navigate = useNavigate ? useNavigate() : () => {};
+  const location = useLocation();
   const [loggedIn, setLoggedIn] = useState(false);
   const [role, setRole] = useState('');
 
@@ -47,12 +48,24 @@ export default function Navbar() {
             onClick={() => navigate('/about')}
           >About</motion.button>
           {role !== 'admin' && (
-            <motion.button
-              whileHover={{ scale: 1.12, backgroundColor: '#C8879B', color: '#fff', boxShadow: '0 4px 16px #C8879B55' }}
-              whileTap={{ scale: 0.97 }}
-              className="px-4 py-2 rounded-lg font-semibold bg-transparent text-[#2A2A2A] transition"
-              onClick={() => navigate('/sweets')}
-            >Sweets</motion.button>
+            <>
+              <motion.button
+                whileHover={{ scale: 1.12, backgroundColor: '#C8879B', color: '#fff', boxShadow: '0 4px 16px #C8879B55' }}
+                whileTap={{ scale: 0.97 }}
+                className="px-4 py-2 rounded-lg font-semibold bg-transparent text-[#2A2A2A] transition"
+                onClick={() => navigate('/sweets')}
+              >Sweets</motion.button>
+              {loggedIn && location.pathname !== '/cart' && (
+                <motion.button
+                  whileHover={{ scale: 1.12, backgroundColor: 'var(--color-btn-secondary-hover)', color: 'var(--color-btn-text)' }}
+                  whileTap={{ scale: 0.97 }}
+                  className="px-4 py-2 rounded-lg font-semibold bg-[var(--color-btn-secondary)] text-[var(--color-btn-text-alt)] transition flex items-center gap-2"
+                  onClick={() => navigate('/cart')}
+                >
+                  <span role="img" aria-label="cart">🛒</span> Cart
+                </motion.button>
+              )}
+            </>
           )}
           {role === 'admin' && (
             <motion.button

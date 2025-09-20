@@ -8,6 +8,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import CustomerDashboard from './pages/CustomerDashboard';
 import Sweets from './pages/Sweets';
 import About from './pages/About';
+import Cart from './pages/Cart';
 
 function App() {
   return (
@@ -18,7 +19,8 @@ function App() {
       <Route path="/admin" element={<AdminDashboard />} />
       <Route path="/dashboard" element={<CustomerDashboard />} />
       <Route path="/sweets" element={<Sweets />} />
-  <Route path="/about" element={<About />} />
+      <Route path="/cart" element={<Cart />} />
+      <Route path="/about" element={<About />} />
     </Routes>
   );
 }

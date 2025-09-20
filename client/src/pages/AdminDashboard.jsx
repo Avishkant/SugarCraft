@@ -101,28 +101,28 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F5F5DC]">
+  <div className="min-h-screen flex flex-col bg-[var(--color-bg)]">
       <Navbar />
       <div className="container mx-auto flex-1 py-10">
         <>
-          <h1 className="text-4xl font-bold text-[#3E2723] mb-2 text-center">Admin Dashboard</h1>
-          <h2 className="text-2xl text-[#FFB74D] mb-6 text-center">Welcome back, Sweet Master 👑 – Manage your store with ease.</h2>
+          <h1 className="text-4xl font-bold text-[var(--color-primary-600)] mb-2 text-center">Admin Dashboard</h1>
+          <h2 className="text-2xl text-[var(--color-btn-secondary)] mb-6 text-center">Welcome back, Sweet Master 👑 – Manage your store with ease.</h2>
           <div className="mb-8 grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
-              <div className="bg-white border-2 border-[#C8879B] rounded-2xl shadow-lg p-6 flex flex-col items-center">
-              <h3 className="text-xl font-bold text-[#795548] mb-2">Add / Edit / Delete Sweets</h3>
-              <p className="text-[#3E2723]">Manage your sweet inventory and update details.</p>
+              <div className="bg-white border-2 border-[var(--color-btn-primary)] rounded-2xl shadow-lg p-6 flex flex-col items-center">
+              <h3 className="text-xl font-bold text-[var(--color-btn-secondary)] mb-2">Add / Edit / Delete Sweets</h3>
+              <p className="text-[var(--color-primary-600)]">Manage your sweet inventory and update details.</p>
             </div>
-            <div className="bg-[#FFF8F0] border-2 border-[#795548] rounded-xl shadow-lg p-6">
-              <h3 className="text-xl font-bold text-[#795548] mb-2">Restock Sweets</h3>
-              <p className="text-[#3E2723]">Keep your shop full of fresh treats.</p>
+            <div className="bg-[var(--color-bg)] border-2 border-[var(--color-btn-secondary)] rounded-xl shadow-lg p-6">
+              <h3 className="text-xl font-bold text-[var(--color-btn-secondary)] mb-2">Restock Sweets</h3>
+              <p className="text-[var(--color-primary-600)]">Keep your shop full of fresh treats.</p>
             </div>
-            <div className="bg-[#FFF8F0] border-2 border-[#795548] rounded-xl shadow-lg p-6">
-              <h3 className="text-xl font-bold text-[#795548] mb-2">Track Inventory</h3>
-              <p className="text-[#3E2723]">Monitor stock levels and avoid running out.</p>
+            <div className="bg-[var(--color-bg)] border-2 border-[var(--color-btn-secondary)] rounded-xl shadow-lg p-6">
+              <h3 className="text-xl font-bold text-[var(--color-btn-secondary)] mb-2">Track Inventory</h3>
+              <p className="text-[var(--color-primary-600)]">Monitor stock levels and avoid running out.</p>
             </div>
-            <div className="bg-[#FFF8F0] border-2 border-[#795548] rounded-xl shadow-lg p-6">
-              <h3 className="text-xl font-bold text-[#795548] mb-2">View Customer Purchases</h3>
-              <p className="text-[#3E2723]">See who’s loving your sweets and their orders.</p>
+            <div className="bg-[var(--color-bg)] border-2 border-[var(--color-btn-secondary)] rounded-xl shadow-lg p-6">
+              <h3 className="text-xl font-bold text-[var(--color-btn-secondary)] mb-2">View Customer Purchases</h3>
+              <p className="text-[var(--color-primary-600)]">See who’s loving your sweets and their orders.</p>
             </div>
           </div>
           <div className="flex justify-center mb-8">
@@ -131,22 +131,22 @@ export default function AdminDashboard() {
               placeholder="Search sweets by name or category..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full max-w-md px-4 py-2 border border-[#A5D6A7] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFB74D] transition bg-[#FFF8F0] text-[#3E2723]"
+              className="w-full max-w-md px-4 py-2 border border-[var(--color-btn-primary)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-btn-secondary)] transition bg-[var(--color-bg)] text-[var(--color-primary-600)]"
             />
           </div>
-          <form className="bg-[#FFF8F0] border-2 border-[#795548] rounded-xl shadow-lg p-6 mb-10 max-w-xl mx-auto" onSubmit={handleAddOrUpdate}>
-            <h2 className="text-2xl font-bold text-[#795548] mb-4">{editId ? 'Update Sweet' : 'Add New Sweet'}</h2>
+          <form className="bg-[var(--color-bg)] border-2 border-[var(--color-btn-secondary)] rounded-xl shadow-lg p-6 mb-10 max-w-xl mx-auto" onSubmit={handleAddOrUpdate}>
+            <h2 className="text-2xl font-bold text-[var(--color-btn-secondary)] mb-4">{editId ? 'Update Sweet' : 'Add New Sweet'}</h2>
             <div className="grid grid-cols-2 gap-4 mb-4">
-              <input type="text" name="name" value={form.name} onChange={handleChange} placeholder="Name" required className="px-4 py-2 border border-[#A5D6A7] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFB74D] transition bg-[#F5F5DC] text-[#3E2723]" />
-              <input type="text" name="category" value={form.category} onChange={handleChange} placeholder="Category" required className="px-4 py-2 border border-[#A5D6A7] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFB74D] transition bg-[#F5F5DC] text-[#3E2723]" />
-              <input type="number" name="price" value={form.price} onChange={handleChange} placeholder="Price" required className="px-4 py-2 border border-[#A5D6A7] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFB74D] transition bg-[#F5F5DC] text-[#3E2723]" />
-              <input type="number" name="quantity" value={form.quantity} onChange={handleChange} placeholder="Quantity" required className="px-4 py-2 border border-[#A5D6A7] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFB74D] transition bg-[#F5F5DC] text-[#3E2723]" />
-              <input type="file" name="image" accept="image/*" onChange={handleChange} className="col-span-2 px-4 py-2 border border-[#A5D6A7] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFB74D] transition bg-[#F5F5DC] text-[#3E2723]" />
+              <input type="text" name="name" value={form.name} onChange={handleChange} placeholder="Name" required className="px-4 py-2 border border-[var(--color-btn-primary)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-btn-secondary)] transition bg-[var(--color-bg)] text-[var(--color-primary-600)]" />
+              <input type="text" name="category" value={form.category} onChange={handleChange} placeholder="Category" required className="px-4 py-2 border border-[var(--color-btn-primary)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-btn-secondary)] transition bg-[var(--color-bg)] text-[var(--color-primary-600)]" />
+              <input type="number" name="price" value={form.price} onChange={handleChange} placeholder="Price" required className="px-4 py-2 border border-[var(--color-btn-primary)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-btn-secondary)] transition bg-[var(--color-bg)] text-[var(--color-primary-600)]" />
+              <input type="number" name="quantity" value={form.quantity} onChange={handleChange} placeholder="Quantity" required className="px-4 py-2 border border-[var(--color-btn-primary)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-btn-secondary)] transition bg-[var(--color-bg)] text-[var(--color-primary-600)]" />
+              <input type="file" name="image" accept="image/*" onChange={handleChange} className="col-span-2 px-4 py-2 border border-[var(--color-btn-primary)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-btn-secondary)] transition bg-[var(--color-bg)] text-[var(--color-primary-600)]" />
               {imagePreview && (
                 <img src={imagePreview} alt="Preview" className="col-span-2 mt-2 rounded-lg shadow-md max-h-32 object-contain" />
               )}
             </div>
-            <button type="submit" className="w-full bg-gradient-to-r from-[#FFB74D] to-[#A5D6A7] text-[#3E2723] py-2 rounded-lg font-semibold shadow-lg hover:scale-105 transition">{editId ? 'Update Sweet' : 'Add Sweet'}</button>
+            <button type="submit" className="w-full bg-[var(--color-btn-primary)] text-[var(--color-btn-text)] py-2 rounded-lg font-semibold shadow-lg hover:bg-[var(--color-btn-primary-hover)] hover:text-[var(--color-btn-text-alt)] transition disabled:opacity-50">{editId ? 'Update Sweet' : 'Add Sweet'}</button>
           </form>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <AnimatePresence>
@@ -161,7 +161,7 @@ export default function AdminDashboard() {
                     exit={{ opacity: 0, scale: 0.8, y: 40 }}
                     transition={{ duration: 0.4, type: 'spring' }}
                     whileHover={{ scale: 1.04, boxShadow: '0 8px 32px #FFB74D55' }}
-                    className="bg-[#FFF8F0] border-2 border-[#795548] rounded-xl shadow-lg p-6 flex flex-col items-center relative overflow-hidden group"
+                    className="bg-[var(--color-bg)] border-2 border-[var(--color-btn-secondary)] rounded-xl shadow-lg p-6 flex flex-col items-center relative overflow-hidden group"
                   >
                     {sweet.image && (
                       <motion.img
@@ -173,20 +173,20 @@ export default function AdminDashboard() {
                         transition={{ duration: 0.5 }}
                       />
                     )}
-                    <h2 className="text-2xl font-bold text-[#3E2723] mb-2 group-hover:text-[#FFB74D] transition-colors duration-300">{sweet.name}</h2>
-                    <p className="text-[#795548] mb-1">Category: {sweet.category}</p>
-                    <p className="text-[#3E2723] font-semibold mb-2">Price: ₹{sweet.price}</p>
-                    <p className="text-[#A5D6A7] mb-2">In stock: {sweet.quantity}</p>
+                    <h2 className="text-2xl font-bold text-[var(--color-primary-600)] mb-2 group-hover:text-[var(--color-btn-secondary)] transition-colors duration-300">{sweet.name}</h2>
+                    <p className="text-[var(--color-btn-secondary)] mb-1">Category: {sweet.category}</p>
+                    <p className="text-[var(--color-primary-600)] font-semibold mb-2">Price: ₹{sweet.price}</p>
+                    <p className="text-[var(--color-btn-primary-hover)] mb-2">In stock: {sweet.quantity}</p>
                     <motion.div className="flex gap-2 mt-2"
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.2 }}
                     >
-                      <button onClick={() => handleEdit(sweet)} disabled={loading} className="px-3 py-1 rounded-lg bg-gradient-to-r from-[#A5D6A7] to-[#FFB74D] text-[#3E2723] font-semibold shadow hover:scale-110 transition-transform duration-200 focus:outline-none focus:ring-2 focus:ring-[#FFB74D]">Edit</button>
-                      <button onClick={() => handleDelete(sweet._id)} disabled={loading} className="px-3 py-1 rounded-lg bg-[#795548] text-[#F5F5DC] font-semibold shadow hover:scale-110 transition-transform duration-200 focus:outline-none focus:ring-2 focus:ring-[#795548]">Delete</button>
+                      <button onClick={() => handleEdit(sweet)} disabled={loading} className="px-3 py-1 rounded-lg bg-[var(--color-btn-primary)] text-[var(--color-btn-text)] font-semibold shadow hover:bg-[var(--color-btn-primary-hover)] hover:text-[var(--color-btn-text-alt)] hover:scale-110 transition-transform duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--color-btn-secondary)]">Edit</button>
+                      <button onClick={() => handleDelete(sweet._id)} disabled={loading} className="px-3 py-1 rounded-lg bg-[var(--color-btn-secondary)] text-[var(--color-btn-text-alt)] font-semibold shadow hover:bg-[var(--color-btn-secondary-hover)] hover:text-[var(--color-btn-text)] hover:scale-110 transition-transform duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--color-btn-secondary)]">Delete</button>
                     </motion.div>
                     {editId === sweet._id && (
-                      <span className="absolute top-2 right-2 bg-[#FFB74D] text-[#3E2723] px-2 py-1 rounded shadow animate-pulse">Editing</span>
+                      <span className="absolute top-2 right-2 bg-[var(--color-btn-secondary)] text-[var(--color-primary-600)] px-2 py-1 rounded shadow animate-pulse">Editing</span>
                     )}
                   </motion.div>
                 ))

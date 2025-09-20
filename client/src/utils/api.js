@@ -1,3 +1,24 @@
+// Purchase sweets in cart
+export async function purchaseCart(cart, token) {
+	// cart: array of { _id, cartQty }
+	const results = [];
+	for (const item of cart) {
+		const res = await fetch(`${BASE_URL}/sweets/${item._id}/purchase`, {
+			method: 'POST',
+			headers: {
+				'Authorization': `Bearer ${token}`,
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ quantity: item.cartQty }),
+		});
+		if (!res.ok) {
+			results.push({ _id: item._id, error: (await res.json()).message || 'Failed to purchase' });
+		} else {
+			results.push(await res.json());
+		}
+	}
+	return results;
+}
 // SWEETS CRUD
 export async function fetchSweets(token) {
 	const res = await fetch(`${BASE_URL}/sweets`, {
