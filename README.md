@@ -103,10 +103,8 @@ See full coverage report in `coverage/lcov-report/index.html`.
 
 ## Deployment
 
-This app will be deployed soon. Platform and live link will be updated here:
-
-> **Deployed on:** [Platform Name]
-> **Live Link:** [To be updated]
+> **Deployed on:** [Render]
+> **Live Link:** (https://sugarcraftt.onrender.com)
 
 ---
 
