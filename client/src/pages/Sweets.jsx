@@ -1,11 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { fetchSweets } from '../utils/api';
 import { motion } from 'framer-motion';
+import SweetCard from '../components/SweetCard';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
 export default function Sweets() {
   const [sweets, setSweets] = useState([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const loader = useRef(null);
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
   const [minPrice, setMinPrice] = useState('');
@@ -26,13 +30,26 @@ export default function Sweets() {
       setLoading(false);
       return;
     }
-    fetchSweets(token)
+    setLoading(true);
+    fetchSweets(token, page, 12)
       .then(data => {
-        setSweets(data);
+        setSweets(prev => [...prev, ...data.sweets]);
+        setHasMore(data.hasMore);
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, []);
+  }, [page]);
+
+  useEffect(() => {
+    if (!hasMore) return;
+    const observer = new window.IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) {
+        setPage(prev => prev + 1);
+      }
+    });
+    if (loader.current) observer.observe(loader.current);
+    return () => observer.disconnect();
+  }, [hasMore]);
 
   const filtered = sweets.filter(sweet => {
     const matchesSearch = sweet.name.toLowerCase().includes(search.toLowerCase());
@@ -102,7 +119,7 @@ export default function Sweets() {
   return (
     <div className="min-h-screen flex flex-col bg-[var(--color-bg)]">
       <Navbar />
-      <div className="container mx-auto flex-1 py-10">
+  <div className="w-full flex-1 py-6 px-2 sm:px-4 mx-auto">
         <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-4xl font-extrabold text-[var(--color-primary-600)] mb-8 text-center">Shop Sweets</motion.h1>
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="flex flex-wrap gap-4 justify-center mb-8">
           <input type="text" placeholder="Search by name..." value={search} onChange={e => setSearch(e.target.value)} className="px-4 py-2 rounded-lg border border-[var(--color-btn-primary)] focus:ring-2 focus:ring-[var(--color-btn-secondary)] bg-white text-[var(--color-primary-600)]" />
@@ -117,35 +134,26 @@ export default function Sweets() {
           <input type="number" placeholder="Min Price" value={minPrice} onChange={e => setMinPrice(e.target.value)} className="px-4 py-2 rounded-lg border border-[var(--color-btn-primary)] w-24 bg-white text-[var(--color-primary-600)]" />
           <input type="number" placeholder="Max Price" value={maxPrice} onChange={e => setMaxPrice(e.target.value)} className="px-4 py-2 rounded-lg border border-[var(--color-btn-secondary)] w-24 bg-white text-[var(--color-primary-600)]" />
         </motion.div>
-        {loading ? (
-          <div className="text-center text-[#6366f1]">Loading sweets...</div>
-        ) : !localStorage.getItem('token') ? (
+        {!localStorage.getItem('token') ? (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="flex flex-col items-center justify-center py-20">
             <h2 className="text-3xl font-bold text-[#f43f5e] mb-4">Login to view sweets</h2>
             <button onClick={() => window.location.href='/login'} className="bg-[var(--color-btn-primary)] text-[var(--color-btn-text)] px-6 py-3 rounded-full font-bold shadow-lg hover:bg-[var(--color-btn-primary-hover)] hover:text-[var(--color-btn-text-alt)] hover:scale-105 transition">Login</button>
           </motion.div>
         ) : (
           <>
-            <motion.div initial="hidden" animate="visible" variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.08 } } }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <motion.div initial="hidden" animate="visible" variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.08 } } }} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 min-w-0">
               {filtered.length === 0 ? (
                 <div className="col-span-3 text-center text-[var(--color-btn-secondary)]">No sweets found.</div>
               ) : (
                 filtered.map(sweet => (
-                  <motion.div key={sweet._id} whileHover={{ scale: 1.04, boxShadow: '0 8px 32px #C8879B55' }} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center">
-                    {sweet.image && <img src={sweet.image} alt={sweet.name} className="mb-3 rounded-lg shadow-md max-h-32 object-contain" />}
-                    <h2 className="text-2xl font-bold text-[var(--color-primary-600)] mb-1">{sweet.name}</h2>
-                    <p className="text-[var(--color-btn-secondary)] mb-1">{sweet.category}</p>
-                    <p className="text-[var(--color-primary-600)] mb-2">₹{sweet.price}</p>
-                    <div className="flex gap-2 mt-2">
-                      {sweet.quantity === 0 ? (
-                        <button className="px-3 py-1 rounded-lg bg-gray-300 text-gray-500 font-semibold shadow cursor-not-allowed" disabled>Sold Out</button>
-                      ) : (
-                        <button className="px-3 py-1 rounded-lg bg-[var(--color-btn-primary)] text-[var(--color-btn-text)] font-semibold shadow hover:bg-[var(--color-btn-primary-hover)] hover:text-[var(--color-btn-text-alt)] hover:scale-105 transition" onClick={() => handleAddToCart(sweet)}>Add to Cart</button>
-                      )}
-                    </div>
+                  <motion.div key={sweet._id} whileHover={{ scale: 1.04, boxShadow: '0 8px 32px #C8879B55' }} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="min-w-0">
+                    <SweetCard sweet={sweet} onAddToCart={handleAddToCart} />
                   </motion.div>
                 ))
               )}
+              <div ref={loader} className="col-span-3 text-center py-4">
+                {loading && hasMore && <span className="text-[#6366f1]">Loading more sweets...</span>}
+              </div>
             </motion.div>
           </>
         )}

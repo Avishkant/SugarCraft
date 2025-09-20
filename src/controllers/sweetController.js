@@ -19,8 +19,13 @@ exports.createSweet = async (req, res) => {
 
 exports.getSweets = async (req, res) => {
   try {
-    const sweets = await Sweet.find();
-    res.status(200).json(sweets);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const skip = (page - 1) * limit;
+    const total = await Sweet.countDocuments();
+    const sweets = await Sweet.find().skip(skip).limit(limit);
+    const hasMore = skip + sweets.length < total;
+    res.status(200).json({ sweets, hasMore });
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
   }

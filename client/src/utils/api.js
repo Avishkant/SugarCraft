@@ -20,8 +20,8 @@ export async function purchaseCart(cart, token) {
 	return results;
 }
 // SWEETS CRUD
-export async function fetchSweets(token) {
-	const res = await fetch(`${BASE_URL}/sweets`, {
+export async function fetchSweets(token, page = 1, limit = 20) {
+	const res = await fetch(`${BASE_URL}/sweets?page=${page}&limit=${limit}`, {
 		method: 'GET',
 		headers: {
 			'Authorization': `Bearer ${token}`,

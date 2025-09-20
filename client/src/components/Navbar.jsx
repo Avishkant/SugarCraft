@@ -8,6 +8,7 @@ export default function Navbar() {
   const location = useLocation();
   const [loggedIn, setLoggedIn] = useState(false);
   const [role, setRole] = useState('');
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     setLoggedIn(!!localStorage.getItem('token'));
@@ -29,12 +30,13 @@ export default function Navbar() {
   };
 
   return (
-  <nav className="bg-[#F8F8F8] text-[#2A2A2A] shadow-lg sticky top-0 z-50 animate-fadeIn border-b-4 border-[#D3C9BE]">
-  <div className="container mx-auto flex justify-between items-center py-4 px-6">
+    <nav className="bg-[#F8F8F8] text-[#2A2A2A] shadow-lg sticky top-0 z-50 animate-fadeIn border-b-4 border-[#D3C9BE]">
+      <div className="container mx-auto flex justify-between items-center py-4 px-6">
         <a href="/" className="flex items-center">
           <motion.img src={SugarCraftLogo} alt="SugarCraft Logo" className="h-10 w-auto drop-shadow-lg hover:scale-110 transition" whileHover={{ scale: 1.12, rotate: 8 }} />
         </a>
-        <div className="flex gap-4 items-center">
+        {/* Desktop Nav */}
+        <div className="hidden md:flex gap-4 items-center">
           <motion.button
             whileHover={{ scale: 1.12, backgroundColor: '#D3C9BE', color: '#2A2A2A', boxShadow: '0 4px 16px #D3C9BE55' }}
             whileTap={{ scale: 0.97 }}
@@ -84,6 +86,29 @@ export default function Navbar() {
           {loggedIn && (
             <motion.button whileHover={{ scale: 1.08, backgroundColor: '#C8879B', color: '#fff' }} whileTap={{ scale: 0.97 }} onClick={handleLogout} className="bg-[#C8879B] text-white px-4 py-2 rounded-lg font-semibold hover:bg-[#B8A287] hover:text-[#2A2A2A] transition">Logout</motion.button>
           )}
+        </div>
+        {/* Hamburger Icon for Mobile */}
+        <button className="md:hidden flex items-center px-3 py-2 border rounded text-[#2A2A2A] border-[#C8879B]" onClick={() => setMenuOpen(!menuOpen)} aria-label="Open menu">
+          <svg className="fill-current h-6 w-6" viewBox="0 0 20 20"><path d="M3 6h14M3 10h14M3 14h14" /></svg>
+        </button>
+      </div>
+      {/* Overlay to close menu (outside menu container) */}
+      {menuOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 z-40" onClick={() => setMenuOpen(false)} />
+      )}
+      {/* Mobile Slide-out Menu */}
+      <div className={`md:hidden fixed top-0 left-0 w-3/4 max-w-xs h-full bg-[#F8F8F8] shadow-lg z-50 transform transition-transform duration-300 ${menuOpen ? 'translate-x-0' : '-translate-x-full'}`} style={{ borderRight: '4px solid #D3C9BE' }}>
+        <div className="flex flex-col gap-4 p-6 pt-10">
+          <button className="text-left font-bold text-lg mb-4 text-[#2A2A2A]" onClick={() => { setMenuOpen(false); navigate('/'); }}>Home</button>
+          <button className="text-left font-bold text-lg mb-4 text-[#2A2A2A]" onClick={() => { setMenuOpen(false); navigate('/about'); }}>About</button>
+          {role !== 'admin' && <button className="text-left font-bold text-lg mb-4 text-[#2A2A2A]" onClick={() => { setMenuOpen(false); navigate('/sweets'); }}>Sweets</button>}
+          {loggedIn && location.pathname !== '/cart' && role !== 'admin' && <button className="text-left font-bold text-lg mb-4 text-[#2A2A2A]" onClick={() => { setMenuOpen(false); navigate('/cart'); }}>Cart</button>}
+          {role === 'admin' && <button className="text-left font-bold text-lg mb-4 text-[#2A2A2A]" onClick={() => { setMenuOpen(false); navigate('/admin'); }}>Admin Dashboard</button>}
+          {!loggedIn && <>
+            <button className="text-left font-bold text-lg mb-4 text-[#2A2A2A]" onClick={() => { setMenuOpen(false); navigate('/login'); }}>Login</button>
+            <button className="text-left font-bold text-lg mb-4 text-[#2A2A2A]" onClick={() => { setMenuOpen(false); navigate('/register'); }}>Sign Up</button>
+          </>}
+          {loggedIn && <button className="text-left font-bold text-lg mb-4 text-[#2A2A2A]" onClick={() => { setMenuOpen(false); handleLogout(); }}>Logout</button>}
         </div>
       </div>
     </nav>
