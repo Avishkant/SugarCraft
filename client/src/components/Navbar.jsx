@@ -88,8 +88,12 @@ export default function Navbar() {
           )}
         </div>
         {/* Hamburger Icon for Mobile */}
-        <button className="md:hidden flex items-center px-3 py-2 border rounded text-[#2A2A2A] border-[#C8879B]" onClick={() => setMenuOpen(!menuOpen)} aria-label="Open menu">
-          <svg className="fill-current h-6 w-6" viewBox="0 0 20 20"><path d="M3 6h14M3 10h14M3 14h14" /></svg>
+        <button className="md:hidden flex items-center px-3 py-2 border-2 rounded-full bg-[#C8879B] border-[#B8A287] shadow-lg" onClick={() => setMenuOpen(!menuOpen)} aria-label="Open menu">
+          <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="4" y1="7" x2="20" y2="7" />
+            <line x1="4" y1="12" x2="20" y2="12" />
+            <line x1="4" y1="17" x2="20" y2="17" />
+          </svg>
         </button>
       </div>
       {/* Overlay to close menu (outside menu container) */}
