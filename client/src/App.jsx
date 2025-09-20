@@ -8,7 +8,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import CustomerDashboard from './pages/CustomerDashboard';
 import Sweets from './pages/Sweets';
 import About from './pages/About';
-import Cart from './pages/Cart';
+import Cart from "./pages/Cart.jsx";
 
 function App() {
   return (
