@@ -1,9 +1,11 @@
 import { motion } from 'framer-motion';
-import { useEffect } from 'react';
+// ...existing code...
 import { FiArrowDownCircle } from 'react-icons/fi';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import SweetCarousel from '../components/SweetCarousel';
+import { useState, useEffect } from 'react';
+import { fetchSweets } from '../utils/api';
 import reactLogo from '../assets/react.svg';
 
 
@@ -16,22 +18,22 @@ const COLORS = {
   accentGold: '#B8A287',
 };
 
-const sweets = [
-  { _id: '1', name: 'Chocolate Truffle', category: 'Chocolate', price: 120, quantity: 10, image: reactLogo },
-  { _id: '2', name: 'Strawberry Tart', category: 'Fruit', price: 90, quantity: 5, image: reactLogo },
-  { _id: '3', name: 'Lemon Meringue', category: 'Citrus', price: 100, quantity: 0, image: reactLogo },
-];
+// Remove static sweets, will fetch from backend
 
 
 export default function Home() {
-  // Animate scroll snap for vertical storytelling
+  const [bestSellers, setBestSellers] = useState([]);
   useEffect(() => {
     document.body.style.scrollSnapType = 'y mandatory';
+    const token = localStorage.getItem('token');
+    fetchSweets(token, 1, 8)
+      .then((data) => setBestSellers(data.sweets))
+      .catch(() => setBestSellers([]));
     return () => { document.body.style.scrollSnapType = ''; };
   }, []);
 
   return (
-  <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#F8F8F8] via-[#D3C9BE] to-[#F8F8F8]">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#F8F8F8] via-[#D3C9BE] to-[#F8F8F8]">
       <Navbar />
       {/* Hero Section - Typography, Geometric, CTA */}
       <motion.section
@@ -75,38 +77,17 @@ export default function Home() {
         </motion.button>
       </motion.section>
 
-      {/* Product Showcase Section */}
+      {/* Best Sellers Carousel Section */}
       <section className="max-w-6xl mx-auto py-16 px-4">
-        <h2 className="text-4xl md:text-5xl font-extrabold mb-4 text-center bg-gradient-to-r from-[#C8879B] via-[#FFD700] to-[#B8A287] bg-clip-text text-transparent drop-shadow-xl tracking-tight">
-          Our Best Sellers
-        </h2>
-        <div className="flex justify-center mb-8">
-          <span className="block w-32 h-2 rounded-full bg-gradient-to-r from-[#FFD700] via-[#C8879B] to-[#B8A287] opacity-70"></span>
+        <div className="flex flex-col items-center mb-8">
+          <span className="text-5xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#B8A287] via-[#C8879B] to-[#FFD700] drop-shadow-lg text-center tracking-tight font-poppins flex items-center gap-4">
+            <svg xmlns="http://www.w3.org/2000/svg" className="inline-block h-10 w-10 md:h-12 md:w-12 text-[#B8A287] animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7h18M3 12h18M7 17h10" /></svg>
+            Our Best Sellers
+            <svg xmlns="http://www.w3.org/2000/svg" className="inline-block h-10 w-10 md:h-12 md:w-12 text-[#FFD700] animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10" stroke="#FFD700" strokeWidth="2" fill="#FFD700" /></svg>
+          </span>
+          <span className="block w-32 h-2 rounded-full bg-gradient-to-r from-[#FFD700] via-[#C8879B] to-[#B8A287] opacity-70 mt-4"></span>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
-          {/* Example products, replace with real images and data */}
-          <div className="bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center">
-            <img src="https://cdn.shopify.com/s/files/1/0569/3456/4001/products/Macaron_600x600.jpg?v=1669379822" alt="Macaron" className="w-24 h-24 object-cover rounded-full mb-4" />
-            <h3 className="text-xl font-bold text-[#C8879B] mb-2">Macaron</h3>
-            <p className="text-[#2A2A2A] text-center mb-2">Colorful, delicate French treat.</p>
-            <span className="text-[#B8A287] font-semibold mb-2">₹120</span>
-            <button className="bg-[#C8879B] text-white px-4 py-2 rounded-full font-bold hover:bg-[#FFD700] transition">Add to Cart</button>
-          </div>
-          <div className="bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center">
-            <img src="https://cdn.shopify.com/s/files/1/0569/3456/4001/products/Cupcake_600x600.jpg?v=1669379822" alt="Cupcake" className="w-24 h-24 object-cover rounded-full mb-4" />
-            <h3 className="text-xl font-bold text-[#C8879B] mb-2">Cupcake</h3>
-            <p className="text-[#2A2A2A] text-center mb-2">Decorated, fluffy, and sweet.</p>
-            <span className="text-[#B8A287] font-semibold mb-2">₹90</span>
-            <button className="bg-[#C8879B] text-white px-4 py-2 rounded-full font-bold hover:bg-[#FFD700] transition">Add to Cart</button>
-          </div>
-          <div className="bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center">
-            <img src="https://cdn.shopify.com/s/files/1/0569/3456/4001/products/Chocolate_600x600.jpg?v=1669379822" alt="Chocolate" className="w-24 h-24 object-cover rounded-full mb-4" />
-            <h3 className="text-xl font-bold text-[#C8879B] mb-2">Chocolate</h3>
-            <p className="text-[#2A2A2A] text-center mb-2">Rich, artisanal, and decadent.</p>
-            <span className="text-[#B8A287] font-semibold mb-2">₹150</span>
-            <button className="bg-[#C8879B] text-white px-4 py-2 rounded-full font-bold hover:bg-[#FFD700] transition">Add to Cart</button>
-          </div>
-        </div>
+        <SweetCarousel sweets={bestSellers} autoAdvance={true} />
       </section>
 
       {/* Why Us Section */}
