@@ -51,7 +51,8 @@ export async function addSweet(data, token) {
 	return res.json();
 }
 // API utility for authentication endpoints
-export const BASE_URL = 'http://localhost:5000/api'; // Change to your backend URL
+// Use VITE_SERVER_URL from .env for backend API base URL
+export const BASE_URL = `${import.meta.env.VITE_SERVER_URL}/api`;
 
 export async function registerUser(data) {
 	try {
