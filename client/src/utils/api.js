@@ -21,11 +21,13 @@ export async function purchaseCart(cart, token) {
 }
 // SWEETS CRUD
 export async function fetchSweets(token, page = 1, limit = 20) {
+	const headers = {};
+	if (token) {
+		headers['Authorization'] = `Bearer ${token}`;
+	}
 	const res = await fetch(`${BASE_URL}/sweets?page=${page}&limit=${limit}`, {
 		method: 'GET',
-		headers: {
-			'Authorization': `Bearer ${token}`,
-		},
+		headers,
 	});
 	if (!res.ok) throw new Error((await res.json()).message || 'Failed to fetch sweets');
 	return res.json();

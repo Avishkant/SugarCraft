@@ -40,8 +40,8 @@ export default function SweetCarousel({ sweets, autoAdvance = false }) {
   return (
     <div className="w-full flex items-center justify-center py-8">
       <div className="relative w-full max-w-6xl overflow-hidden">
-        {/* Sweet Cards */}
-        <div className="flex gap-6 justify-center items-stretch px-4 sm:px-6">
+        {/* Sweet Cards - Responsive Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-2 sm:px-4">
           {visible.map((sweet, i) => (
             <AnimatePresence key={sweet._id} initial={false} mode="wait">
               <motion.div
@@ -50,33 +50,47 @@ export default function SweetCarousel({ sweets, autoAdvance = false }) {
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.85, y: -50 }}
                 transition={{ duration: 0.6, ease: "easeInOut" }}
-                className="flex-1 min-w-[260px] max-w-sm bg-white rounded-3xl shadow-xl p-6 flex flex-col items-center justify-between border-2 border-[#FFD700]/30 hover:border-[#C8879B]/50 hover:shadow-2xl transition-all duration-300"
+                className="min-w-[220px] max-w-sm bg-white rounded-3xl shadow-xl p-4 sm:p-6 flex flex-col items-center justify-between border-2 border-[#FFD700]/30 hover:border-[#C8879B]/50 hover:shadow-2xl transition-all duration-300"
               >
                 <motion.img
                   src={sweet.image}
                   alt={sweet.name}
-                  className="w-32 h-32 object-cover rounded-2xl mb-4 shadow-md border-2 border-[#C8879B]/30"
+                  className="w-24 h-24 sm:w-32 sm:h-32 object-cover rounded-2xl mb-4 shadow-md border-2 border-[#C8879B]/30"
                   whileHover={{ scale: 1.1, rotate: 2 }}
                   transition={{ duration: 0.3 }}
                 />
-                <h3 className="text-xl font-extrabold text-[#C8879B] mb-2 text-center font-poppins drop-shadow">
+                <h3 className="text-lg sm:text-xl font-extrabold text-[#C8879B] mb-2 text-center font-poppins drop-shadow">
                   {sweet.name}
                 </h3>
-                <p className="text-base text-[#B8A287] mb-1 font-medium">
+                <p className="text-sm sm:text-base text-[#B8A287] mb-1 font-medium">
                   {sweet.category}
                 </p>
-                <span className="text-lg text-[#FFD700] font-bold mb-3">
+                <span className="text-base sm:text-lg text-[#FFD700] font-bold mb-3">
                   ₹{sweet.price}
                 </span>
                 {sweet.quantity === 0 ? (
-                  <span className="px-4 py-2 rounded-xl bg-gray-200 text-gray-500 font-semibold shadow cursor-not-allowed w-full text-center">
+                  <span className="px-3 py-2 rounded-xl bg-gray-200 text-gray-500 font-semibold shadow cursor-not-allowed w-full text-center text-xs sm:text-base">
                     Sold Out
                   </span>
                 ) : (
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="px-4 py-2 rounded-xl bg-[#C8879B] text-white font-bold shadow w-full text-center hover:bg-[#B8A287] transition"
+                    className="px-3 py-2 rounded-xl bg-[#C8879B] text-white font-bold shadow w-full text-center hover:bg-[#B8A287] transition text-xs sm:text-base"
+                    onClick={() => {
+                      const token = localStorage.getItem('token');
+                      if (!token) {
+                        window.location.href = '/login';
+                      } else {
+                        let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                        const exists = cart.find(item => item._id === sweet._id);
+                        if (!exists) {
+                          cart.push({ ...sweet, quantity: 1 });
+                          localStorage.setItem('cart', JSON.stringify(cart));
+                        }
+                        alert('Sweet added to cart!');
+                      }
+                    }}
                   >
                     Add to Cart
                   </motion.button>
