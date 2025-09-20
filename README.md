@@ -72,6 +72,8 @@ SugarCraft uses [Cloudinary](https://cloudinary.com/) for image upload and stora
 > #Home page
 > ![Home Page](https://github.com/Avishkant/SugarCraft/blob/main/Images/Screenshot%20(861).png?raw=true)
 > ![Carousel](https://github.com/Avishkant/SugarCraft/blob/main/Images/Screenshot%20(862).png?raw=true)
+> ![Registration Page](https://github.com/Avishkant/SugarCraft/blob/main/Images/Screenshot%20(864).png?raw=true)
+> ![Login](https://github.com/Avishkant/SugarCraft/blob/main/Images/Screenshot%20(863).png?raw=true)
 > ![Admin Dashboard](https://github.com/Avishkant/SugarCraft/blob/main/Images/Screenshot%20(868).png?raw=true)
 > ![User Dashboard](https://github.com/Avishkant/SugarCraft/blob/main/Images/Screenshot%20(865).png?raw=true)
 > ![Sweets](https://github.com/Avishkant/SugarCraft/blob/main/Images/Screenshot%20(866).png?raw=true)
